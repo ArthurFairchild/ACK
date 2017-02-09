@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="**\*.cs" />
+    <EmbeddedResource Include="**\*.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NETStandard.Library" Version="1.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SmartBotAPI">
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartBotProfiles">
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotProfiles.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartBotStats">
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotStats.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
