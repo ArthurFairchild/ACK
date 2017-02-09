@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACK - Tools", "Identifier\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBot Testing", "..\..\..\..\..\Desktop\sb-v40.8\SmartBot Testing.csproj", "{395768A4-E264-4DBD-BA10-D57ABBCCD02B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACK", "..\VarGenerator\InternalCardTemplate2\ACK.csproj", "{9213B1AB-6FA7-4DE7-9821-945F59F12DFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACK", "ACK\ACK.csproj", "{9213B1AB-6FA7-4DE7-9821-945F59F12DFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
