@@ -588,8 +588,6 @@ namespace ACK
 
         public DeckClassification(List<string> deckList, HeroClass dClass = HeroClass.NONE)
         {
-
-            //DeckList = deckList.Select(q => (string)Enum.Parse(typeof(string), q)).ToList().Where(card => new MinimalCardTemplate(card).IsCollectible).ToList();
             DeckList = deckList;
             Pre_5_Drops = DeckList.Count(c => new MinimalCardTemplate(c).Cost < 5);
             Post_5_Drops = DeckList.Count(c => new MinimalCardTemplate(c).Cost >= 5);

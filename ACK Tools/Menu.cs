@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
+using ACK;
 using SmartBot.Database;
 
 namespace ACKTools
@@ -13,6 +15,8 @@ namespace ACKTools
         private readonly string _smartBotPath = "";
         private string MatchHistoryPath = "";
         private string DeckPerformanceString = "";
+        private HistoryDebugger historyForm = null;
+        private MulliganTester mulliganTesterForm = null;
         public Menu()
         {
             InitializeComponent();
@@ -22,9 +26,9 @@ namespace ACKTools
             bool test = false;
             while (!test)
             {
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\SmartBotPath.txt"))
+                if (File.Exists(Application.StartupPath + "\\SmartBotPath.txt"))
                 {
-                    _smartBotPath = File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + "\\SmartBotPath.txt").First();
+                    _smartBotPath = File.ReadLines(Application.StartupPath + "\\SmartBotPath.txt").First();
                     if (File.Exists(_smartBotPath + "\\Logs\\ACKTracker\\MatchHistory.txt"))
                         MatchHistoryPath = _smartBotPath + "\\Logs\\ACKTracker\\MatchHistory.txt";
                     if (File.Exists(_smartBotPath + "\\Logs\\ACKTracker\\DeckPerformanceHistory.txt"))
@@ -35,7 +39,7 @@ namespace ACKTools
                 FolderBrowserDialog fbd = new FolderBrowserDialog
                 {
                     Description =
-                        @"Navigate to main SmartBot Folder\nExample C:/Users/Claire/Desktop/sb-v40.8/\nDon't select any other folder"
+                        $"Navigate to main SmartBot Folder\nExample C:/Users/Claire/Desktop/sb-v40.8/\nDon't select any other folder"
                 };
                 switch (fbd.ShowDialog())
                 {
@@ -47,8 +51,8 @@ namespace ACKTools
                         if (!File.Exists(fbd.SelectedPath + "\\Logs\\ACKTracker\\MatchHistory.txt"))
                         {
                             if (
-                                MessageBox.Show(@"First time ACK User?",
-                                    @"Necessary files not found", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                MessageBox.Show($"First time ACK User?",
+                                    $"Necessary files not found", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 return;
                             }
@@ -62,7 +66,7 @@ namespace ACKTools
                         {
                             using (
                                     StreamWriter sw =
-                                        new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "\\SmartBotPath.txt"))
+                                        new StreamWriter(Application.StartupPath + "\\SmartBotPath.txt"))
                             {
                                 sw.WriteLine(fbd.SelectedPath);
                                 _smartBotPath = fbd.SelectedPath;
@@ -85,39 +89,72 @@ namespace ACKTools
                 }
             }
 
+            Thread task = new Thread(GetMyDecksPlayedDecks) {IsBackground = true};
+            task.Start();
+            historyForm = new HistoryDebugger(_smartBotPath)
+            {
+                FormBorderStyle = FormBorderStyle.FixedSingle,
+                MaximizeBox = false,
+                MinimizeBox = false
+            };
+            mulliganTesterForm = new MulliganTester(_smartBotPath, db)
+            {
+                FormBorderStyle = FormBorderStyle.FixedSingle,
+                MaximizeBox = false,
+                MinimizeBox = false
+            };
 
         }
 
 
-
-
-
         private void classifyHistoryBtn_Click(object sender, EventArgs e)
         {
-            var hdf = new HistoryDebugger(_smartBotPath);
-            hdf.Show();
+            historyForm.Show();
             
 
 
         }
 
 
-        private void classifyDeckBtn_Click(object sender, EventArgs e)
+        public Dictionary<string, DeckClassification> db = new Dictionary<string, DeckClassification>();
+        private void GetMyDecksPlayedDecks()
         {
+            List<string> _myDecks = File.ReadAllLines(_smartBotPath + "\\Logs\\ACK\\MatchHistory.txt").Reverse().ToList();
+            List<string> decks = new List<string>();
+            Dictionary<string, bool> alreadyParsed = new Dictionary<string, bool>();
+            foreach (var q in _myDecks)
+            {
 
+                if (alreadyParsed.ContainsKey(q)) continue;
+                var deck = q.Split('~')[5];
+                if (deck.ToCharArray()[0] == ',') deck = deck.Substring(1); //some idiot put comma at the beggining of a decklist
+                decks.Add(deck);
+                alreadyParsed.AddOrUpdate(q, true);
+            }
+            foreach (var q in decks)
+            {
+
+                DeckClassification dc = new DeckClassification(q.Split(',').ToList());
+                if (db.ContainsValue(dc)) continue;
+                db[dc.Name] = dc;
+                //ourPlayedDeckLB.Items.Add(dc.Name);
+
+            }
+            //MessageBox.Show($"{_ourPlayedDecks.First().Key}\n{_ourPlayedDecks.First().Value.DeckList}");
         }
-
         private void mulliganTesterBtn_Click(object sender, EventArgs e)
         {
-            var mtf = new MulliganTester(_smartBotPath);
-            mtf.Show();
+           
+            mulliganTesterForm.Show();
             
 
         }
 
         private void cardBreakdownBtn_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show("HI Loser");
+            var def = new Form2();
+            def.Show();
         }
 
 
@@ -261,5 +298,8 @@ namespace ACKTools
         {
 
         }
+
+        
+      
     }
 }

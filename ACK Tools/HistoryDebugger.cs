@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,27 +50,7 @@ namespace ACKTools
             button5_Click(sender, e);
         }
         public static string wcd = "";
-        /// <summary>
-        /// Load History Button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button2_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                if (!File.Exists(_smartBotPath+"\\Logs\\ACK\\MatchHistory.txt"))
-                {
-                    MessageBox.Show(@"You need to select SmartBotfolder. ");
-                    return;
-                }
-                _smartBotPath = fbd.SelectedPath;
-            }
-            wcd = _smartBotPath+"\\Logs\\ACK\\";
-            FillGameHistoryList(_smartBotPath + "\\Logs\\ACK\\MatchHistory.txt", wcd+ "\\WronglyClassifiedDecks.txt");
-           
-        }
+       
 
         private void FillGameHistoryList(string matchHistoryPath, string wronglyIdentifiedPath)
         {
@@ -82,15 +63,14 @@ namespace ACKTools
 
             foreach (var deck in AllDecks)
             {
+                
                 List<Card.Cards> CardsDeck = ParseHistoryString(deck);
-                DeckClassification nextClassification = new DeckClassification(CardsDeck.Select(c=> c.ToString()).ToList());
-                string list = "";
-                foreach (var q in nextClassification.DeckList.Distinct())
-                {
-
-                    list += q.ToString() + ":" + nextClassification.DeckList.Count(c => c == q) + ";";
-
-                }
+                //MessageBox.Show(string.Join(",", CardsDeck));
+                
+                DeckClassification nextClassification = 
+                    new DeckClassification(CardsDeck.Select(c=> c.Template().Id.ToString()).ToList());
+                string list = nextClassification.DeckList.Distinct()
+                    .Where(q => CardTemplate.LoadFromId(q).IsCollectible).Aggregate("", (current, q) => current + (q.ToString() + ":" + nextClassification.DeckList.Count(c => c == q) + ";"));
 
                 //HistoryListBox.Items.Add(list);
                 GameHistory.Items.Add(list);
@@ -103,8 +83,21 @@ namespace ACKTools
 
         private List<Card.Cards> ParseHistoryString(string deck)
         {
-
-            return deck.Split(',').Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)).ToList();
+            //MessageBox.Show(deck);
+            var omg = deck.Split(',').ToList();
+            foreach (var q in omg)
+            {
+                try
+                {
+                    var card = (Card.Cards) Enum.Parse(typeof(Card.Cards), q);
+                }
+                catch (Exception)
+                {
+                    omg.Remove(q);
+                    break;
+                }
+            }
+            return omg.Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)).Where(w=> w.Template().IsCollectible).ToList();
         }
 
         private void GameHistory_SelectedIndexChanged(object sender, EventArgs e)
@@ -204,6 +197,11 @@ namespace ACKTools
             var location = wcd.Length < 1
                ? AppDomain.CurrentDomain.BaseDirectory
                : wcd;
+            if(GameHistory.GetSelected(GameHistory.SelectedIndex))
+                GameHistory.SetItemChecked(GameHistory.SelectedIndex,false);
+            
+            
+            
             using (StreamWriter sw = new StreamWriter(location + "\\Report.txt", true))
             {
                 sw.WriteLine(DeckTrackerRichBox.Text + "\n\nCorrectly Classified as " + DeckIdentity.Name + "\n");
@@ -225,7 +223,7 @@ namespace ACKTools
         //Page 1 Incorrect Button
         private void button4_Click(object sender, EventArgs e)
         {
-            using (StreamWriter sw = new StreamWriter(wcd+ "WronglyClassifiedDecks.txt", true))
+            using (StreamWriter sw = new StreamWriter(wcd+ "ReviewedDecks.txt", true))
             {
                 sw.WriteLine(DeckTrackerRichBox.Text);
             }
@@ -241,5 +239,12 @@ namespace ACKTools
         }
 
 
+    }
+    public static class BSExtension
+    {
+        public static CardTemplate Template(this Card.Cards card)
+        {
+            return CardTemplate.LoadFromId(card);
+        }
     }
 }

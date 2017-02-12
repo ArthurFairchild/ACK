@@ -21,10 +21,7 @@ namespace ACKTools
             numGamesTxtBox.Items.Add("200");
             numGamesTxtBox.Items.Add("500");
             numGamesTxtBox.Items.Add("1000");
-
             numGamesTxtBox.SelectedIndex = 0;
-            
-
         }
 
         private List<string> matchHistoryOldtxt = new List<string>();
@@ -63,9 +60,24 @@ namespace ACKTools
             }
         }
 
+        public static string DupKeys(string s)
+        {
+            char[] strChar = s.ToLower().ToCharArray();
+            Dictionary<char, int> values = new Dictionary<char, int>();
+            foreach (var q in strChar)
+            {
+                if (values.ContainsKey(q))
+                    values[q]++;
+                else values[q] = 1;
+            }
+            return values.Aggregate("{", (current, value) => current+"," + $"{value.Key}={value.Value}" );
+
+        }
         private void MergeBtn_Click(object sender, EventArgs e)
         {
             int numGames = 0;
+            MessageBox.Show($"Succesfully Rewritten MatchHistory.txt\nTransfer it from {newPath} to sb/Logs/ACK/");
+            if (deckPerformanceHistoryCount.Text == "" || matchHistoryCount.Text == "") return;
             try
             {
                 numGames = Int32.Parse(numGamesTxtBox.SelectedItem.ToString());
@@ -87,11 +99,11 @@ namespace ACKTools
                     
                 }
             }
-            MessageBox.Show(@"Succesfully Generated new MatchHistory.txt");
+            MessageBox.Show($"Succesfully Rewritten MatchHistory.txt\nTransfer it from{newPath} to sb/Logs/ACK/");
             this.Close();
             Application.OpenForms[0].AutoSize = true;
         }
 
-        
+       
     }
 }

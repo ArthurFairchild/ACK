@@ -21,6 +21,7 @@ namespace ACKTools
             menu.MaximizeBox = false;
             menu.MinimizeBox = false;
             Application.Run(menu);
+
         }
     }
 }

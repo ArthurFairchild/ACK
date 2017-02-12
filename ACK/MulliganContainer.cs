@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using SmartBot.Plugins.API;
 
 namespace ACK
@@ -13,6 +14,7 @@ namespace ACK
         //public ACK.Style
         public class MulliganCoreData
         {
+
             /// <summary>
             /// Limit 1 drops without coin
             /// </summary>
@@ -54,6 +56,7 @@ namespace ACK
 
             public MulliganCoreData()
             {
+                
                 Max1Drops = 1; 
                 Max1DropsCoin = 2;
                 Max2Drops = 2;
@@ -69,6 +72,8 @@ namespace ACK
             public MulliganCoreData(List<int> data)
             {
                 if (data.Count != 8) return;
+                
+
                 Max1Drops = data[0]; //1
                 Max1DropsCoin = data[1];//1c
                 Max2Drops = data[2];//2
@@ -114,6 +119,7 @@ namespace ACK
 
             public void UpdateStrictCurve(bool oneForTwo, bool twoForThree, bool threeForFour)
             {
+
                 RequireOneForTwo = oneForTwo;
                 RequireTwoForThree = twoForThree;
                 RequireThreeForFour = threeForFour;
@@ -228,6 +234,8 @@ namespace ACK
 
         public List<string> CardsToKeep { get; set; }
 
+        private string Path { get; set; }
+
         /// <summary>
         /// Mulligan Container provided mode, choices, opponent class, own class and our decklist
         /// </summary>
@@ -239,6 +247,7 @@ namespace ACK
         public MulliganContainer(string mode, List<string> choices, string opponentClass,
             string ownClass, List<string> myDeckList)
         {
+            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
 
             Choices = choices;
             OpponentClass = (HeroClass)Enum.Parse(typeof(HeroClass), opponentClass);
@@ -274,7 +283,34 @@ namespace ACK
             CardsToKeep = new List<string>();
             CoreMaxes = new MulliganCoreData();
         }
+        public MulliganContainer()
+        {
+            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+            Choices = new List<string>();
+            OpponentClass = HeroClass.NONE;
+            OwnClass = HeroClass.NONE;
+            Coin = false;
 
+            LogData = false;
+            MyDeck = new List<string>();
+            MyDeckClassification = new DeckClassification(MyDeck, OwnClass);
+            MyChoicesClassification = new DeckClassification(Choices, OwnClass);
+            Mode = "NONE";
+            MyStyle = DeckClassification.Style.Midrange;
+            EnemyStyle = DeckClassification.Style.Midrange;
+            ZeroDrops = new List<string>();
+            OneDrops = new List<string>();
+            TwoDrops = new List<string>();
+            ThreeDrops = new List<string>();
+            FourDrops = new List<string>();
+            FivePlusDrops = new List<string>();
+            HasTurnOne = false;
+            HasTurnTwo = false;
+            HasTurnThree = false;
+            WhiteList = new Dictionary<string, bool>();
+            CardsToKeep = new List<string>();
+            CoreMaxes = new MulliganCoreData();
+        }
         public List<string> GetCardsWeKeep()
         {
             foreach (var s in from s in Choices
@@ -399,14 +435,14 @@ namespace ACK
         public void Log(string str)
         {
             //if (!LogData) return;
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ACKTracker\\MatchHistory.txt"))
+            if (!File.Exists(Path + "\\Logs\\ACKTracker\\MatchHistory.txt"))
             {
-                File.Create(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ACKTracker\\MatchHistory.txt");
+                File.Create(Path + "\\Logs\\ACKTracker\\MatchHistory.txt");
             }
             try
             {
                 using (
-                    StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ACK_MC_log",
+                    StreamWriter sw = new StreamWriter(Path + "\\Logs\\ACK_MC_log",
                         true))
                 {
                     sw.WriteLine(str);
@@ -422,7 +458,7 @@ namespace ACK
         /// </summary>
         public void ClearLog()
         {
-            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ACK_MC_log", "");
+            File.WriteAllText(Path + "\\Logs\\ACK_MC_log", "");
         }
 
         private static int GetCost(string card)
@@ -456,7 +492,15 @@ namespace ACK
         public int GetPriority(string card)
         {
             Log($"Priority for {card} has been requested." );
-            return !card.IsMinion() ? 0 : MinionPriorityTable[card];
+            try
+            {
+                return !card.IsMinion() ? 0 : MinionPriorityTable[card];
+            }
+            catch (KeyNotFoundException)
+            {
+                Log($"CRITICAL ERROR: {card} was passed, but it's not in the dictionary");
+                return 0;
+            }
         }
         /// <summary>
         /// Priority Table

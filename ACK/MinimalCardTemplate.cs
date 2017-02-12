@@ -5391,12 +5391,22 @@ namespace ACK
 
         public MinimalCardTemplate(string id)
         {
-            Name = DbTuple[id].Item1;
-            Cost = DbTuple[id].Item2;
-            Type = DbTuple[id].Item3;
-            Race = DbTuple[id].Item4;
-            CardClass = DbTuple[id].Item5;
-
+            try
+            {
+                Name = DbTuple[id].Item1;
+                Cost = DbTuple[id].Item2;
+                Type = DbTuple[id].Item3;
+                Race = DbTuple[id].Item4;
+                CardClass = DbTuple[id].Item5;
+            }
+            catch (Exception)
+            {
+                Name = "kappa";
+                Cost = DbTuple[Name].Item2;
+                Type = DbTuple[Name].Item3;
+                Race = DbTuple[Name].Item4;
+                CardClass = DbTuple[Name].Item5;
+            }
 
         }
 

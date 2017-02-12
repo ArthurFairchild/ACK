@@ -15,10 +15,11 @@ namespace ACKTools
     public partial class MulliganTester : Form
     {
         public string pathToSB = "";
-        public MulliganTester(string sbPath)
+        public MulliganTester(string sbPath, Dictionary<string, DeckClassification> db = null)
         {
             InitializeComponent();
             pathToSB = sbPath;
+            GenerateMulligan();
             CardPool = CardTemplate.TemplateList.Keys.Select(c => c).Where(w => CardTemplate.LoadFromId(w).IsCollectible).ToList();
             ClassPool = new List<Card.CClass>
             {
@@ -43,9 +44,9 @@ namespace ACKTools
                 cardOffer4.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
 
             }
-            myStyleBox.Items.AddRange(new object[]{ACK.DeckClassification.Style.Aggro, ACK.DeckClassification.Style.Midrange, ACK.DeckClassification.Style.Control });
+            myStyleBox.Items.AddRange(new object[] { ACK.DeckClassification.Style.Aggro, ACK.DeckClassification.Style.Midrange, ACK.DeckClassification.Style.Control });
             enemyStyleBox.Items.AddRange(new object[] { ACK.DeckClassification.Style.Aggro, ACK.DeckClassification.Style.Midrange, ACK.DeckClassification.Style.Control });
-            modeBox.Items.AddRange(new object[]{Bot.Mode.Arena, Bot.Mode.RankedStandard});
+            modeBox.Items.AddRange(new object[] { Bot.Mode.Arena, Bot.Mode.RankedStandard });
             myStyleBox.SelectedIndex = 0;
             enemyStyleBox.SelectedIndex = 0;
             modeBox.SelectedIndex = 0;
@@ -68,12 +69,36 @@ namespace ACKTools
                 var line = sr.ReadLine().Split('~');
                 myDeckText.Text = line[5];
             }
+            deckSimChkbx.Checked = false;
+            deckId.Text = "Arena/Autofill";
+            _ourPlayedDecks = db;
+            FillPlayedDecks();
 
         }
+        public void DebugLog(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(DebugLog), new object[] { value });
+                return;
+            }
+            debugFlowRchTxtBx.Text += $"\n{value}";
+        }
+
+
+
+        private void FillPlayedDecks()
+        {
+            foreach (var q in _ourPlayedDecks)
+            {
+                ourPlayedDeckLB.Items.Add(q.Key);
+            }
+        }
+
 
         private void CheckCriticalFiles()
         {
-            bool _write = false;
+
             if (!File.Exists(pathToSB + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
             {
                 using (StreamWriter sw = new StreamWriter(pathToSB + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
@@ -96,9 +121,9 @@ namespace ACKTools
 
         private void mulliganButton_Click(object sender, EventArgs e)
         {
-            applySettingsBtn_Click(sender, e);
-            richTextBox1.Text = "";//Comment
-
+            //applySettingsBtn_Click(sender, e);
+            if (!coinBox.Checked && cardOffer4.Text != "")
+                cardOffer4.SelectedItem = null;
 
             List<Card.Cards> myChoices = new List<Card.Cards>();
             Card.CClass myClass = Card.CClass.SHAMAN;
@@ -119,12 +144,13 @@ namespace ACKTools
             myChoices.Add((Card.Cards)Enum.Parse(typeof(Card.Cards), card3));
             if (card4chosen)
                 myChoices.Add((Card.Cards)Enum.Parse(typeof(Card.Cards), card4));
-            myClass = (Card.CClass) Enum.Parse(typeof(Card.CClass), this.myClass.SelectedItem.ToString());
+            myClass = (Card.CClass)Enum.Parse(typeof(Card.CClass), this.myClass.SelectedItem.ToString());
             enemyClass = (Card.CClass)Enum.Parse(typeof(Card.CClass), EnemyClass.SelectedItem.ToString());
-            
+            DebugLog("Choices, eClass, mClass setup");
+
             var test = SimulateMulligan(myClass, enemyClass, myChoices);
-            richTextBox1.Text += "Kept\n";  
-            foreach (var q in test.OrderBy(c=> c.Template().Cost))
+            richTextBox1.Text += "Kept\n";
+            foreach (var q in test.OrderBy(c => c.Template().Cost))
             {
                 if (!card4chosen && q == Card.Cards.GAME_005) continue;
                 richTextBox1.Text += $"[{q.Template().Cost} mana] [{q.Template().Atk}/{q.Template().Health}] {q.Template().Name}\n";
@@ -141,22 +167,24 @@ namespace ACKTools
         }
         private void button2_Click(object sender, EventArgs e)
         {
+            DebugLog("Random Cards Clicked");
             Random rt = new Random();
+            DebugLog("Random Mulligan Clicked");
             if (randomEnemy.Checked)
                 EnemyClass.SelectedIndex = rt.Next(0, EnemyClass.Items.Count);
             bool highlander = renoAssumptionChckbx.Checked;
 
             var ListIndexes = cardOffer1.Items;
 
-            int card1 = rt.Next(0, ListIndexes.Count);
+            int card1 = rt.Next(1, ListIndexes.Count);
             cardOffer1.SelectedIndex = card1;
             if (highlander) ListIndexes.RemoveAt(card1);
 
-            int card2 = rt.Next(0, ListIndexes.Count);
+            int card2 = rt.Next(1, ListIndexes.Count);
             cardOffer2.SelectedIndex = card2;
             if (highlander) ListIndexes.RemoveAt(card2);
 
-            int card3 = rt.Next(0, ListIndexes.Count);
+            int card3 = rt.Next(1, ListIndexes.Count);
             cardOffer3.SelectedIndex = card3;
             if (highlander) ListIndexes.RemoveAt(card3);
 
@@ -170,12 +198,17 @@ namespace ACKTools
             card4 = rt.Next(0, ListIndexes.Count);
             if (highlander) ListIndexes.RemoveAt(card4);
             cardOffer4.SelectedIndex = card4;
+            DebugLog("Random Cards Selected");
+
             if (randomEnemyStyle.Checked)
                 enemyStyleBox.SelectedIndex = rt.Next(0, enemyStyleBox.Items.Count);
+            DebugLog("Enemy Style Chosen");
+            DebugLog("Entering Mulligan Process");
+
             mulliganButton_Click(sender, e);
         }
         public List<Card.Cards> CardsToKeep = new List<Card.Cards>();
-        
+
         /// <summary>
         /// Pain in the ass....
         /// </summary>
@@ -185,28 +218,44 @@ namespace ACKTools
         /// <returns></returns>
         public List<Card.Cards> SimulateMulligan(Card.CClass ownHero, Card.CClass enemyHero, List<Card.Cards> choices)
         {
-            debugRichText.Text ="";
+            richTextBox1.Text = "";
             if (choices.Count < 3)
-                return new List<Card.Cards>{Card.Cards.GAME_005}; //We are coin haters. 
+                return new List<Card.Cards> { Card.Cards.GAME_005 }; //We are coin haters. 
+            DebugLog("Entered Simulation");
+            DebugLog("Starting Simulation Process");
+            CardsToKeep = ACKMulligan.HandleMulligan(choices, enemyHero, ownHero);
+            DebugLog("Finished Simulation Process");
+            DebugLog("Finished Simulation");
+            return CardsToKeep;
 
-            CardsToKeep = choices;
-            string path = pathToSB+ "\\MulliganProfiles\\ACK - Mulligan.cs";
-            debugRichText.Text += path+"\n";
+        }
+
+
+
+
+        Dictionary<string, DeckClassification> _ourPlayedDecks = new Dictionary<string, DeckClassification>();
+        public MulliganProfile ACKMulligan = null;
+
+        public void GenerateMulligan()
+        {
+            string path = pathToSB + "\\MulliganProfiles\\ACK - Mulligan.cs";
+            DebugLog($"Path to {path} is set");
             List<string> stringList = new List<string>();
             try
             {
                 stringList.Add(File.ReadAllText(path));
+                DebugLog("Read ACK - Mulliga.cs");
                 using (CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp"))
                 {
-                    
+                    DebugLog("Starting Compilation Process");
                     CompilerParameters options = new CompilerParameters
                     {
-                        GenerateInMemory = true, 
+                        GenerateInMemory = true,
 
-                        
+
                     };
-                    
-                    options.ReferencedAssemblies.AddRange(new string[5]
+                    DebugLog("Options Created");
+                    options.ReferencedAssemblies.AddRange(new[]
                     {
                         "System.Core.dll",
                         $"{pathToSB}\\SmartBotUI.exe",
@@ -215,56 +264,46 @@ namespace ACKTools
                         "ACK.dll"
 
                     });
-                    debugRichText.Text += "Succesfully provided References to Core, UI, API, Forms, ACK\n";
+                    DebugLog("Libs Loaded");
+
                     CompilerResults compilerResults = provider.CompileAssemblyFromSource(options, stringList.ToArray());
+                    DebugLog("Compiler Results Aquired");
                     if (compilerResults.Errors.Count != 0)
                     {
                         string str = $"{compilerResults.Errors.Count} Errors:";
                         for (int index = 0; index < compilerResults.Errors.Count; ++index)
-                            str = str + "\r\nLine: " + compilerResults.Errors[index].Line + " - " + compilerResults.Errors[index].ErrorText;
+                            str = str + "\r\nLine: " + compilerResults.Errors[index].Line + " - " +
+                                  compilerResults.Errors[index].ErrorText;
                         MessageBox.Show(str + "\r\n\r\n", "Compilation Error");
-                        return new List<Card.Cards>();
+                        return;
                     }
-                    debugRichText.Text += "No Compilation errors\n";
+                    DebugLog("No Compelation Errors");
                     Assembly compiledAssembly = compilerResults.CompiledAssembly;
-                    debugRichText.Text += "Assembly Compiled succesfully\n";
-                    MulliganProfile mulliganProfile1 = null;
+                    DebugLog("Assembly Compiled Errors");
+
+
                     foreach (Type type in compiledAssembly.GetTypes())
                     {
                         if (type.GetInterfaces().Contains(typeof(MulliganProfile)))
-                            mulliganProfile1 = (MulliganProfile)Activator.CreateInstance(type);
-                        debugRichText.Text += $"Added reference {type.Name}\n";
+                            ACKMulligan = (MulliganProfile)Activator.CreateInstance(type);
+
 
                     }
-                    if (mulliganProfile1 == null)
-                    {
-                        MessageBox.Show("Mulligan class not found!");
-                        return new List<Card.Cards>();
-                    }
-                    debugRichText.Text += $"Mulligan Profile Loaded {mulliganProfile1}\n";
+                    DebugLog("ACK - Mulligan simulator created");
 
-                    object[] parameters = new object[3]
-                    {
-                        choices,
-                        enemyHero,
-                        ownHero
-                    };
-                    
-                    debugRichText.Text += $"Parameters Created\n{parameters[0]}\n{parameters[1]}\n{parameters[2]}";
-                    
-                        CardsToKeep = mulliganProfile1.HandleMulligan(choices, enemyHero, ownHero);
-                        debugRichText.Text += $"Results passed\n{CardsToKeep.First()}";
-                    
-
+                    if (ACKMulligan != null) return;
+                    MessageBox.Show("Mulligan class not found!");
+                    return;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new List<Card.Cards>();
+                DebugLog(e.Message);
+                ACKMulligan = null;
+                return;
             }
-            return CardsToKeep;
-        }
 
+        }
         private void modeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -281,24 +320,18 @@ namespace ACKTools
                 if (line != null)
                 {
                     var data = line.Split(',');
-                    foreach (var q in data)
-                    {
-                        if (q.Length < 1) break;
-                        
-                        deck.Add((Card.Cards) Enum.Parse(typeof(Card.Cards), q));
-                    }
-                    
+                    deck.AddRange(data.TakeWhile(q => q.Length >= 1).Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)));
                 }
             }
             using (StreamWriter sw = new StreamWriter(pathToSB + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
             {
-                
-                sw.WriteLine($"{myStyleBox.SelectedItem}~{myStyleBox.SelectedItem}~" +
+
+                sw.WriteLine($"{myStyleBox.SelectedItem}~{enemyStyleBox.SelectedItem}~" +
                              $"{oneDropCount.Value}~{oneDropCoin.Value}~{twoDropCount.Value}~{TwoDropCoin.Value}~{threeDrop.Value}~{threeDropCoin.Value}" +
                              $"~{fourDrop.Value}~{fourDropCoin.Value}~{reqOneTwo.Checked}~{reqTwoThree.Checked}~{reqThreeFour.Checked}~{coinSkip.Checked}~" +
                              $"{modeBox.SelectedItem}~{string.Join(",", deck)}");
             }
-            var DeckID = new DeckClassification(deck.Select(c=> c.ToString()).ToList());
+            var DeckID = new DeckClassification(deck.Select(c => c.ToString()).ToList());
             deckId.Text = DeckID.Name;
 
         }
@@ -378,11 +411,11 @@ namespace ACKTools
                 if (line != null)
                 {
                     var data = line.Split(',');
-                    deck.AddRange(data.TakeWhile(q => q.Length >= 1).Select(q => (Card.Cards) Enum.Parse(typeof(Card.Cards), q)));
+                    deck.AddRange(data.TakeWhile(q => q.Length >= 1).Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)));
                 }
             }
 
-            setInUse = checkBox1.Checked ? allSet.ToList() : deck;
+            setInUse = deckSimChkbx.Checked ? allSet.ToList() : deck;
             foreach (var q in setInUse)
             {
 
@@ -392,25 +425,54 @@ namespace ACKTools
                 cardOffer4.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
 
             }
+            deckId.Text = "Arena/Autofill";
         }
 
         private void myClass_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
             cardOffer1.Items.Clear();
             cardOffer2.Items.Clear();
             cardOffer3.Items.Clear();
             cardOffer4.Items.Clear();
 
-            foreach (var q in CardPool.Where(c=> c.Template().IsCollectible && (c.Template().Class == (Card.CClass) myClass.SelectedItem || c.Template().Class == Card.CClass.NONE)))
+            foreach (var q in CardPool.Where(c => c.Template().IsCollectible && (c.Template().Class == (Card.CClass)myClass.SelectedItem || c.Template().Class == Card.CClass.NONE)))
             {
-                
+
                 cardOffer1.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
                 cardOffer2.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
                 cardOffer3.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
                 cardOffer4.Items.Add($"{CardTemplate.LoadFromId(q).Name}~{q}");
 
             }
+        }
+        /*
+         * Card.CClass.SHAMAN, Card.CClass.MAGE, Card.CClass.PRIEST,
+                Card.CClass.HUNTER, Card.CClass.PALADIN, Card.CClass.WARRIOR,
+                Card.CClass.WARLOCK, Card.CClass.ROGUE, Card.CClass.DRUID
+         */
+
+        readonly Dictionary<string, int> _heroIndex = new Dictionary<string, int>
+        {
+            {"SHAMAN", 0 },  {"MAGE", 1 }, {"PRIEST", 2 },
+            {"HUNTER", 3 }, {"PALADIN", 4 }, {"WARRIOR", 5 },
+            {"WARLOCK", 6 }, {"ROGUE", 7 }, {"DRUID", 8 },
+        };
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (deckSimChkbx.Checked) return;
+            myDeckText.Text = string.Join(",", _ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckList);
+            myClass.SelectedIndex =
+                _heroIndex[_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckClass.ToString()];
+            checkBox1_CheckedChanged(sender, e);
+            richTextBox2.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].ClassificationSummary()}";
+            richTextBox3.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].MulliganCoreSummary()}";
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

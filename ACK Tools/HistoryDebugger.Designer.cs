@@ -65,38 +65,38 @@
             // 
             // SimpleClassifyField
             // 
-            this.SimpleClassifyField.Location = new System.Drawing.Point(3, 20);
+            this.SimpleClassifyField.Location = new System.Drawing.Point(4, 31);
             this.SimpleClassifyField.Name = "SimpleClassifyField";
             this.SimpleClassifyField.ReadOnly = true;
-            this.SimpleClassifyField.Size = new System.Drawing.Size(179, 20);
+            this.SimpleClassifyField.Size = new System.Drawing.Size(178, 20);
             this.SimpleClassifyField.TabIndex = 34;
             // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.button3.Location = new System.Drawing.Point(6, 44);
+            this.button3.Location = new System.Drawing.Point(190, 3);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(90, 23);
+            this.button3.Size = new System.Drawing.Size(125, 23);
             this.button3.TabIndex = 23;
-            this.button3.Text = "Correct";
+            this.button3.Text = "Correct Classification";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.button4.Location = new System.Drawing.Point(102, 44);
+            this.button4.Location = new System.Drawing.Point(190, 29);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(80, 23);
+            this.button4.Size = new System.Drawing.Size(125, 23);
             this.button4.TabIndex = 6;
-            this.button4.Text = "Incorrect Identification";
+            this.button4.Text = "Incorrect Classification";
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 4);
+            this.label1.Location = new System.Drawing.Point(6, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 34;
@@ -104,16 +104,16 @@
             // 
             // HearthpwnRichTextBox
             // 
-            this.HearthpwnRichTextBox.Location = new System.Drawing.Point(6, 81);
+            this.HearthpwnRichTextBox.Location = new System.Drawing.Point(6, 95);
             this.HearthpwnRichTextBox.Name = "HearthpwnRichTextBox";
-            this.HearthpwnRichTextBox.Size = new System.Drawing.Size(176, 254);
+            this.HearthpwnRichTextBox.Size = new System.Drawing.Size(176, 301);
             this.HearthpwnRichTextBox.TabIndex = 36;
             this.HearthpwnRichTextBox.Text = "";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 70);
+            this.label2.Location = new System.Drawing.Point(6, 79);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 37;
@@ -127,7 +127,7 @@
             this.tabControl1.Location = new System.Drawing.Point(210, 9);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(196, 428);
+            this.tabControl1.Size = new System.Drawing.Size(329, 428);
             this.tabControl1.TabIndex = 39;
             // 
             // SImple
@@ -142,16 +142,16 @@
             this.SImple.Location = new System.Drawing.Point(4, 22);
             this.SImple.Name = "SImple";
             this.SImple.Padding = new System.Windows.Forms.Padding(3);
-            this.SImple.Size = new System.Drawing.Size(188, 402);
+            this.SImple.Size = new System.Drawing.Size(321, 402);
             this.SImple.TabIndex = 0;
             this.SImple.Text = "Simple";
             this.SImple.UseVisualStyleBackColor = true;
             // 
             // DeckTrackerRichBox
             // 
-            this.DeckTrackerRichBox.Location = new System.Drawing.Point(6, 344);
+            this.DeckTrackerRichBox.Location = new System.Drawing.Point(188, 95);
             this.DeckTrackerRichBox.Name = "DeckTrackerRichBox";
-            this.DeckTrackerRichBox.Size = new System.Drawing.Size(176, 52);
+            this.DeckTrackerRichBox.Size = new System.Drawing.Size(127, 301);
             this.DeckTrackerRichBox.TabIndex = 38;
             this.DeckTrackerRichBox.Text = "";
             // 
@@ -166,7 +166,7 @@
             this.Detailed.Location = new System.Drawing.Point(4, 22);
             this.Detailed.Name = "Detailed";
             this.Detailed.Padding = new System.Windows.Forms.Padding(3);
-            this.Detailed.Size = new System.Drawing.Size(188, 402);
+            this.Detailed.Size = new System.Drawing.Size(321, 402);
             this.Detailed.TabIndex = 1;
             this.Detailed.Text = "Detailed";
             this.Detailed.UseVisualStyleBackColor = true;
@@ -174,9 +174,9 @@
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.button6.Location = new System.Drawing.Point(3, 373);
+            this.button6.Location = new System.Drawing.Point(190, 29);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(176, 23);
+            this.button6.Size = new System.Drawing.Size(125, 23);
             this.button6.TabIndex = 40;
             this.button6.Text = "Incorrect Classification";
             this.button6.UseVisualStyleBackColor = false;
@@ -185,9 +185,9 @@
             // button5
             // 
             this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.button5.Location = new System.Drawing.Point(3, 350);
+            this.button5.Location = new System.Drawing.Point(190, 3);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(176, 23);
+            this.button5.Size = new System.Drawing.Size(125, 23);
             this.button5.TabIndex = 39;
             this.button5.Text = "Correct Classification";
             this.button5.UseVisualStyleBackColor = false;
@@ -196,7 +196,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 42);
+            this.label4.Location = new System.Drawing.Point(6, 58);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(50, 13);
             this.label4.TabIndex = 34;
@@ -204,26 +204,26 @@
             // 
             // VariablesRichTextBox
             // 
-            this.VariablesRichTextBox.Location = new System.Drawing.Point(3, 58);
+            this.VariablesRichTextBox.Location = new System.Drawing.Point(6, 74);
             this.VariablesRichTextBox.Name = "VariablesRichTextBox";
             this.VariablesRichTextBox.ReadOnly = true;
-            this.VariablesRichTextBox.Size = new System.Drawing.Size(179, 286);
+            this.VariablesRichTextBox.Size = new System.Drawing.Size(309, 322);
             this.VariablesRichTextBox.TabIndex = 34;
             this.VariablesRichTextBox.Text = "";
             this.VariablesRichTextBox.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // ClassificationTextBox
             // 
-            this.ClassificationTextBox.Location = new System.Drawing.Point(6, 19);
+            this.ClassificationTextBox.Location = new System.Drawing.Point(6, 31);
             this.ClassificationTextBox.Name = "ClassificationTextBox";
             this.ClassificationTextBox.ReadOnly = true;
-            this.ClassificationTextBox.Size = new System.Drawing.Size(144, 20);
+            this.ClassificationTextBox.Size = new System.Drawing.Size(178, 20);
             this.ClassificationTextBox.TabIndex = 34;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 3);
+            this.label3.Location = new System.Drawing.Point(6, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 13);
             this.label3.TabIndex = 35;
@@ -234,7 +234,7 @@
             this.wrongClassificationPath.Location = new System.Drawing.Point(12, 458);
             this.wrongClassificationPath.Name = "wrongClassificationPath";
             this.wrongClassificationPath.ReadOnly = true;
-            this.wrongClassificationPath.Size = new System.Drawing.Size(390, 20);
+            this.wrongClassificationPath.Size = new System.Drawing.Size(517, 20);
             this.wrongClassificationPath.TabIndex = 40;
             // 
             // label5
@@ -242,9 +242,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(12, 444);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(163, 13);
+            this.label5.Size = new System.Drawing.Size(89, 13);
             this.label5.TabIndex = 41;
-            this.label5.Text = "Wrong Classification Report Path";
+            this.label5.Text = "Reviewed Decks";
             // 
             // label6
             // 
@@ -260,14 +260,14 @@
             this.matchHistoryPath2.Location = new System.Drawing.Point(12, 497);
             this.matchHistoryPath2.Name = "matchHistoryPath2";
             this.matchHistoryPath2.ReadOnly = true;
-            this.matchHistoryPath2.Size = new System.Drawing.Size(390, 20);
+            this.matchHistoryPath2.Size = new System.Drawing.Size(517, 20);
             this.matchHistoryPath2.TabIndex = 43;
             // 
             // HistoryDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 526);
+            this.ClientSize = new System.Drawing.Size(575, 528);
             this.Controls.Add(this.matchHistoryPath2);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);

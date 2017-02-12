@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ACK
 {
@@ -94,12 +93,12 @@ namespace ACK
                 Coin = "NoCoin"; //Unfortunately Coin is not in IsCollectable(), it was never saved.
                 Result = mhValues[1];
                 MyClass = mhValues[4];
-                MyDeck = mhValues[11];
-                MyPlayed = dPh[5];
-                MyDrawn = dPh[4];
+                MyDeck = mhValues[11].ToCharArray()[0] == ',' ? mhValues[11].Substring(1) : mhValues[11]; //idiot fix
+                MyPlayed = dPh[5].ToCharArray()[0] == ',' ? dPh[5].Substring(1) : dPh[5];
+                MyDrawn = dPh[4].ToCharArray()[0] == ',' ? dPh[4].Substring(1) : dPh[4]; ;
                 OpponentId = mhValues[2];
                 OpponentClass = mhValues[7];
-                OpponentCards = mhValues[10];
+                OpponentCards = mhValues[10].ToCharArray()[0] == ',' ? mhValues[10].Substring(1) : mhValues[10]; ;
             }
 
             public override string ToString()
@@ -123,6 +122,12 @@ namespace ACK
                 OpponentId = mHs[8];
                 OpponentClass = mHs[9];
                 OpponentCards = mHs[10];
+            }
+
+            public List<string> GetList()
+            {
+                return MyDeck.Split(',').ToList();
+               
             }
         }
     }
