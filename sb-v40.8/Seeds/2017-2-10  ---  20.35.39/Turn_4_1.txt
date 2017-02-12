@@ -1,0 +1,33 @@
+Board --- Garrosh Hellscream(23/0-30/1)Malfurion Stormrage 
+
+WeaponFriend : Fiery War Axe[CS2_106][3/1]
+
+AbilityFriend : Armor Up![CS2_102]
+AbilityEnemy : Shapeshift[CS2_017]
+
+Mana : 2
+Enemy secret: False
+
+Friends : 
+Armorsmith[EX1_402][1/4]CAN[True]IDX[0]
+
+Enemy : 
+Nightblade[EX1_593][4/2]CAN[True]IDX[0]
+
+Hand : 
+Disciple of C'Thun[OG_162][2/1]COST[3]
+Crazed Worshipper[OG_321][3/6]COST[5]
+The Coin[GAME_005]COST[0]
+Disciple of C'Thun[OG_162][2/1]COST[3]
+Ancient Shieldbearer[OG_301][6/6]COST[7]
+Battle Rage[EX1_392]COST[2]
+Execute[CS2_108]COST[2]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 21 -- EnemyDeck : 23
+Value : 32,15
+
+@4~2~1~0~0~21~23~0~False~4~True~4~0~CS2_106*-1*0*3*2*1*2*5*0*0*4*-1*0*False*False*False*False*False*False*False*False*False*False*False*False*False*4*False~HERO_01*-1*0*3*0*7*0*64*30*0*8*23*0*False*False*False*False*False*False*False*False*False*False*False*False*False*8*False~HERO_06*-1*1*0*0*0*0*66*30*0*8*30*0*False*False*False*False*True*False*False*False*False*False*False*False*False*8*False~CS2_102*-1*0*0*2*0*0*65*0*0*8*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*8*False~CS2_017*-1*0*0*2*0*0*67*0*0*8*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*8*False~EX1_402*0*0*1*2*0*0*16*4*0*2*4*0*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False~EX1_593*0*0*4*5*2*0*44*4*0*1*2*0*False*False*False*False*True*False*False*False*False*False*False*False*False*1*False~OG_162*0*0*2*3*0*0*25*1*0*0*1*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_321*1*0*3*5*0*0*11*6*0*0*6*0*False*False*True*False*False*False*True*False*False*False*False*False*False*0*False|GAME_005*2*0*0*0*0*0*68*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_162*3*0*2*3*0*0*10*1*0*0*1*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_301*4*0*6*7*0*0*29*6*0*0*6*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_392*5*0*0*2*0*0*6*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_108*6*0*0*2*0*0*12*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~EX1_391~0~CS2_189|CS2_013~0~False=True=False=True=True=False~0~0~0~False~EX1_410,EX1_410,EX1_402,EX1_402,EX1_392,EX1_392,CS2_108,CS2_108,CS2_106,CS2_106,EX1_391,EX1_391,EX1_007,EX1_007,OG_162,OG_162,OG_149,OG_149,EX1_606,EX1_606,OG_286,OG_286,OG_218,OG_321,OG_321,OG_301,OG_301,OG_131,OG_255,OG_280~0~0~0~0~0~False~False~5~False~0~0~

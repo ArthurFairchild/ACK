@@ -36,8 +36,11 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ACK">
+      <HintPath>..\sb-v40.8\Plugins\libs\ACK.dll</HintPath>
+    </Reference>
     <Reference Include="SmartBotAPI">
-      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8 - Copy\SmartBotAPI.dll</HintPath>
+      <HintPath>..\sb-v40.8\SmartBotAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

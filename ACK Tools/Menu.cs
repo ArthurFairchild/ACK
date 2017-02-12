@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using ACK;
@@ -20,7 +21,8 @@ namespace ACKTools
         public Menu()
         {
             InitializeComponent();
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            //MessageBox.Show(new Uri(Assembly.GetExecutingAssembly().CodeBase).PathAndQuery);
+            Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             textBox1.Text =$"{fvi.InternalName} v{fvi.FileVersion}";
             bool test = false;
@@ -125,19 +127,28 @@ namespace ACKTools
             foreach (var q in _myDecks)
             {
 
-                if (alreadyParsed.ContainsKey(q)) continue;
+                
                 var deck = q.Split('~')[5];
-                if (deck.ToCharArray()[0] == ',') deck = deck.Substring(1); //some idiot put comma at the beggining of a decklist
+                try
+                {
+                    if (deck.ToCharArray()[0] == ',')
+                        deck = deck.Substring(1); //some idiot put comma at the beggining of a decklist
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                if (alreadyParsed.ContainsKey(deck)) continue;
+                //MessageBox.Show(string.Join("/", deck));
                 decks.Add(deck);
-                alreadyParsed.AddOrUpdate(q, true);
+                alreadyParsed.AddOrUpdate(deck, true);
             }
-            foreach (var q in decks)
+            foreach (var q in alreadyParsed)
             {
 
-                DeckClassification dc = new DeckClassification(q.Split(',').ToList());
-                if (db.ContainsValue(dc)) continue;
+                DeckClassification dc = new DeckClassification(q.Key.Split(',').ToList());
                 db[dc.Name] = dc;
-                //ourPlayedDeckLB.Items.Add(dc.Name);
+                
 
             }
             //MessageBox.Show($"{_ourPlayedDecks.First().Key}\n{_ourPlayedDecks.First().Value.DeckList}");

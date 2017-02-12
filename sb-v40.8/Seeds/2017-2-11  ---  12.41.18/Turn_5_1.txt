@@ -1,0 +1,30 @@
+Board --- Thrall(30/0-27/0)Gul'dan 
+
+
+AbilityFriend : Totemic Call[CS2_049]
+AbilityEnemy : Life Tap[CS2_056]
+
+Mana : 2
+Enemy secret: False
+
+Friends : 
+Jinyu Waterspeaker[CFM_061][3/6]CAN[False]IDX[0]
+Tunnel Trogg[LOE_018][4/1]CAN[True]IDX[1]ENCH[EX1_565-F|LOE_018-F]
+Flametongue Totem[EX1_565][0/3]CAN[False]IDX[2]
+
+Enemy : 
+Acidic Swamp Ooze[EX1_066][3/2]CAN[True]IDX[0]
+
+Hand : 
+Maelstrom Portal[KAR_073]COST[2]
+Thing from Below[OG_028][5/5]COST[3]
+Azure Drake[EX1_284][4/4]COST[5]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 21 -- EnemyDeck : 20
+Value : 90
+
+@5~2~2~0~0~21~20~0~False~5~True~6~0~0~HERO_02*-1*0*0*0*0*0*66*30*0*10*30*0*False*False*False*False*False*False*False*False*False*False*False*False*False*10*False~HERO_07*-1*0*0*0*3*0*64*30*0*10*27*0*False*False*False*False*True*False*False*False*False*False*False*False*False*10*False~CS2_049*-1*0*0*2*0*0*67*0*0*10*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*10*False~CS2_056*-1*0*0*2*0*0*65*0*0*10*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*10*False~CFM_061*0*0*3*4*0*0*56*6*0*0*6*0*False*False*False*False*True*False*True*False*False*False*False*False*False*0*False|LOE_018*1*0*4*1*2*0*52*3*0*2*1*0*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False*EX1_565o=2=59=0*LOE_018e=2=52=0|EX1_565*2*0*0*2*0*0*59*3*0*2*3*0*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False~EX1_066*0*0*3*2*0*0*4*2*0*1*2*0*False*False*False*False*True*False*False*False*False*False*False*False*False*1*False~KAR_073*0*0*0*2*0*0*45*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_028*1*0*5*3*0*0*34*5*0*0*5*0*False*False*True*False*False*False*True*False*False*False*False*False*False*0*False|EX1_284*2*0*4*5*0*0*55*4*0*0*4*1*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~LOE_018|AT_052|CS2_052|KAR_063|GAME_005~0~CFM_120|AT_111|BRM_005~0~True=True=False=True=False=False~0~1~0~False~EX1_238,EX1_238,KAR_063,KAR_063,LOE_018,LOE_018,EX1_012,EX1_565,EX1_565,KAR_073,KAR_073,AT_052,AT_052,EX1_248,EX1_246,EX1_246,EX1_259,EX1_259,EX1_575,EX1_575,KAR_114,CFM_061,CFM_061,EX1_284,EX1_284,CS2_046,OG_028,OG_028,NEW1_010,EX1_298~0~0~0~0~0~False~False~5~False~0~0~

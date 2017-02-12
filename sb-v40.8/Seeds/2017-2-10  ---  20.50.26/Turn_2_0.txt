@@ -1,0 +1,32 @@
+Board --- Malfurion Stormrage(28/0-30/0)Uther Lightbringer 
+
+
+AbilityFriend : Shapeshift[CS2_017]
+AbilityEnemy : Reinforce[CS2_101]
+
+Mana : 2
+Enemy secret: False
+
+Friends : 
+
+Enemy : 
+Stonetusk Boar[CS2_171][1/1]CAN[True]IDX[0][C]
+Silver Hand Recruit[CS2_101t][1/1]CAN[True]IDX[1]
+
+Hand : 
+Jade Blossom[CFM_713]COST[3]
+Wrath[EX1_154]COST[2]
+Jade Blossom[CFM_713]COST[3]
+Aya Blackpaw[CFM_902][5/3]COST[6]
+The Coin[GAME_005]COST[0]
+Nourish[EX1_164]COST[5]
+Feral Rage[OG_047]COST[3]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 24 -- EnemyDeck : 25
+Value : 15,5
+
+@2~2~1~0~0~24~25~0~False~2~False~4~0~0~HERO_06*-1*0*0*0*2*0*86*30*0*4*28*0*False*False*False*False*False*False*False*False*False*False*False*False*False*4*False~HERO_04*-1*0*0*0*0*0*88*30*0*4*30*0*False*False*False*False*True*False*False*False*False*False*False*False*False*4*False~CS2_017*-1*0*0*2*0*0*87*0*0*4*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*4*False~CS2_101*-1*0*0*2*0*0*89*0*0*4*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*4*False~0~CS2_171*0*0*1*1*0*0*59*1*0*3*1*0*True*False*False*False*True*False*False*False*False*False*False*False*False*3*False|CS2_101t*1*0*1*1*0*0*91*1*0*1*1*0*False*False*False*False*True*False*False*False*False*False*False*False*False*1*False~CFM_713*0*0*0*3*0*0*32*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_154*1*0*0*2*0*0*52*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CFM_713*2*0*0*3*0*0*55*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CFM_902*3*0*5*6*0*0*42*3*0*0*3*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|GAME_005*4*0*0*0*0*0*90*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_164*5*0*0*5*0*0*9*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_047*6*0*0*3*0*0*49*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~0~0~0~0~False=False=False=False=False=False~0~0~0~False~EX1_169,EX1_169,CFM_602,CFM_602,AT_037,AT_037,LOE_115,EX1_066,EX1_066,NEW1_021,NEW1_021,EX1_154,EX1_154,OG_047,OG_047,CFM_713,CFM_713,OG_044,CFM_715,CFM_715,CS2_012,CS2_012,EX1_284,EX1_558,EX1_164,EX1_164,CFM_902,EX1_095,CFM_343,CFM_343~0~0~0~0~0~False~False~2~False~0~0~

@@ -65,7 +65,7 @@
             // 
             // SimpleClassifyField
             // 
-            this.SimpleClassifyField.Location = new System.Drawing.Point(4, 31);
+            this.SimpleClassifyField.Location = new System.Drawing.Point(6, 31);
             this.SimpleClassifyField.Name = "SimpleClassifyField";
             this.SimpleClassifyField.ReadOnly = true;
             this.SimpleClassifyField.Size = new System.Drawing.Size(178, 20);
@@ -73,7 +73,7 @@
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.button3.BackColor = System.Drawing.SystemColors.Control;
             this.button3.Location = new System.Drawing.Point(190, 3);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(125, 23);
@@ -84,7 +84,8 @@
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.button4.BackColor = System.Drawing.SystemColors.Control;
+            this.button4.FlatAppearance.BorderColor = System.Drawing.SystemColors.Control;
             this.button4.Location = new System.Drawing.Point(190, 29);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(125, 23);
@@ -96,7 +97,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 13);
+            this.label1.Location = new System.Drawing.Point(6, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 34;
@@ -267,7 +268,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 528);
+            this.ClientSize = new System.Drawing.Size(544, 528);
             this.Controls.Add(this.matchHistoryPath2);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);

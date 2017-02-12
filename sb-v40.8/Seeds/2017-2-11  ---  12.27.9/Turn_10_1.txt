@@ -1,0 +1,28 @@
+Board --- Thrall(17/0-29/0)Tyrande Whisperwind 
+
+
+AbilityFriend : Totemic Call[CS2_049]
+AbilityEnemy : Lesser Heal[CS1h_001]
+
+Mana : 4
+Enemy secret: False
+
+Friends : 
+Azure Drake[EX1_284][4/4]CAN[True]IDX[0]
+Wrath of Air Totem[CS2_052][0/1]CAN[False]IDX[1]
+Forbidden Ancient[OG_051][1/1]CAN[False]IDX[2]
+
+Enemy : 
+
+Hand : 
+Mana Tide Totem[EX1_575][0/3]COST[3]
+Bloodlust[CS2_046]COST[5]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 14 -- EnemyDeck : 15
+Value : 168,5
+
+@10~4~1~0~0~14~15~0~False~10~True~6~0~0~HERO_02*-1*0*0*0*13*0*64*30*0*20*17*0*False*False*False*False*False*False*False*False*False*False*False*False*False*20*False~HERO_09a*-1*0*0*0*1*0*66*30*0*20*29*0*False*False*False*False*True*False*False*False*False*False*False*False*False*20*False~CS2_049*-1*0*0*2*0*0*65*0*0*20*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*20*False~CS1h_001_H1*-1*0*0*2*0*0*67*0*0*20*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*20*False~EX1_284*0*0*4*5*0*0*20*4*0*2*4*1*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False|CS2_052*1*0*0*1*1*0*89*2*0*2*1*1*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False|OG_051*2*0*1*1*0*0*92*1*0*0*1*0*False*False*False*False*True*False*True*False*False*False*False*False*False*0*False~0~EX1_575*0*0*0*3*0*0*29*3*0*0*3*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_046*1*0*0*5*0*0*27*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~GAME_005|LOE_018|CS2_052|NEW1_009|CFM_061|EX1_259|EX1_012|CFM_061|EX1_259|EX1_238|EX1_246|AT_052|LOE_018|EX1_238|EX1_246|KAR_073~0~CS2_004|CS2_004|BRM_004|AT_017|CS1_112|KAR_033|CFM_626|EX1_248|EX1_tk11|CS2_234|EX1_tk11|LOE_077|hexfrog|KAR_062|hexfrog~0~True=True=True=True=True=False~1~0~0~False~EX1_238,EX1_238,KAR_063,KAR_063,LOE_018,LOE_018,EX1_012,EX1_565,EX1_565,KAR_073,KAR_073,AT_052,AT_052,EX1_248,EX1_246,EX1_246,EX1_259,EX1_259,EX1_575,EX1_575,KAR_114,CFM_061,CFM_061,EX1_284,EX1_284,CS2_046,OG_028,OG_028,NEW1_010,EX1_298~3~0~0~0~0~False~False~10~False~0~0~

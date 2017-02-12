@@ -259,3 +259,47 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/sb-v40.8/Dependencies
+/sb-v40.8/DiscoverCC
+/sb-v40.8/Logs
+/sb-v40.8/Logs/ACKTracker
+/sb-v40.8/MulliganProfiles/ShamanMidrange 1.0.cs
+/sb-v40.8/MulliganProfiles/Lucius.cs
+/sb-v40.8/MulliganProfiles/Default.cs
+/sb-v40.8/MulliganProfiles/ShamanMidrange 1.0.cs
+/sb-v40.8/MulliganProfiles/Lucius.cs
+/sb-v40.8/MulliganProfiles/Default.cs
+/sb-v40.8/Seeds
+/sb-v40.8/Xceed.Wpf.Toolkit.Themes.Metro.dll
+/sb-v40.8/Xceed.Wpf.Toolkit.dll
+/sb-v40.8/Xceed.Wpf.Themes.Metro.dll
+/sb-v40.8/Xceed.Wpf.Themes.dll
+/sb-v40.8/System.Windows.Interactivity.dll
+/sb-v40.8/Stats.ini
+/sb-v40.8/SmartBotUpdater.exe
+/sb-v40.8/SmartBotUI.exe.config
+/sb-v40.8/SmartBotUI.exe
+/sb-v40.8/SmartBotStats.dll
+/sb-v40.8/SmartBotProfiles.dll
+/sb-v40.8/SmartBotPath.txt
+/sb-v40.8/SmartBotDiagTool.exe
+/sb-v40.8/SmartBotAPI.dll
+/sb-v40.8/SmartBot Testing.sln
+/sb-v40.8/SmartBot Testing.csproj
+/sb-v40.8/Settings.ini
+/sb-v40.8/Sessions.json
+/sb-v40.8/Seeds
+/sb-v40.8/protobuf-net.dll
+/sb-v40.8/Newtonsoft.Json.dll
+/sb-v40.8/MulliganTester.settings
+/sb-v40.8/MulliganTester.exe
+/sb-v40.8/MahApps.Metro.dll
+/sb-v40.8/Loader.dll
+/sb-v40.8/Key
+/sb-v40.8/HtmlAgilityPack.dll
+/sb-v40.8/DeckTracker.dll
+/sb-v40.8/CompileErrorsProfile.txt
+/sb-v40.8/CompileErrorsMulligan.txt
+/sb-v40.8/ACK.dll
+/sb-v40.8/ACK Tools.exe.config
+/sb-v40.8/ACK Tools.exe

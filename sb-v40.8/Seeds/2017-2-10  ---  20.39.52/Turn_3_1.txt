@@ -1,0 +1,31 @@
+Board --- Gul'dan(29/0-27/0)Valeera Sanguinar 
+
+WeaponEnemy : Wicked Knife[CS2_082][1/1]
+
+AbilityFriend : Life Tap[CS2_056]
+AbilityEnemy : Dagger Mastery[CS2_083b]
+
+Mana : 2
+Enemy secret: False
+
+Friends : 
+
+Enemy : 
+
+Hand : 
+Leeroy Jenkins[EX1_116][6/2]COST[5]
+Soulfire[EX1_308]COST[1]
+The Coin[GAME_005]COST[0]
+Faceless Shambler[OG_174][1/1]COST[4]
+Mountain Giant[EX1_105][8/8]COST[6]
+Doomsayer[NEW1_021][0/7]COST[2]
+Shadow Bolt[CS2_057]COST[3]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 22 -- EnemyDeck : 24
+Value : 48,5
+
+@3~2~1~0~0~22~24~0~False~3~True~5~CS2_082*-1*0*1*1*1*2*70*0*0*1*-1*0*False*False*False*False*True*False*False*False*False*False*False*False*False*1*False~0~HERO_07*-1*0*0*0*1*0*64*30*0*6*29*0*False*False*False*False*False*False*False*False*False*False*False*False*False*6*False~HERO_03*-1*0*0*0*3*0*66*30*1*6*27*0*False*False*False*False*True*False*False*False*False*False*False*False*False*6*False~CS2_056*-1*0*0*2*0*0*65*0*0*6*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*6*False~CS2_083b*-1*0*0*2*0*0*67*0*0*6*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*6*False~0~0~EX1_116*0*0*6*5*0*0*8*2*0*0*2*0*True*False*False*False*False*False*False*False*False*False*False*False*False*0*False|EX1_308*1*0*0*1*0*0*23*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|GAME_005*2*0*0*0*0*0*68*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|OG_174*3*0*1*4*0*0*28*1*0*0*1*0*False*False*True*False*False*False*True*False*False*False*False*False*False*0*False|EX1_105*4*0*8*6*0*0*26*8*0*0*8*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|NEW1_021*5*0*0*2*0*0*15*7*0*0*7*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_057*6*0*0*3*0*0*13*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~EX1_066|EX1_302~0~CS2_082|CS2_189~0~False=False=False=True=True=False~0~0~0~False~CFM_120,EX1_302,EX1_316,EX1_308,EX1_066,LOE_023,CFM_790,NEW1_021,EX1_058,LOE_077,BRM_005,CS2_117,BRM_006,CS2_057,CFM_608,OG_174,AT_022,CFM_621,AT_111,EX1_303,EX1_043,EX1_564,EX1_116,CFM_652,BRM_028,LOE_011,EX1_309,EX1_016,CFM_751,EX1_105~1~0~0~0~0~False~False~3~False~0~0~

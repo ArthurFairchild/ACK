@@ -1,0 +1,33 @@
+Board --- Thrall(30/0-30/0)Thrall 
+
+WeaponEnemy : Jade Claws[CFM_717][2/1]
+
+AbilityFriend : Totemic Call[CS2_049]
+AbilityEnemy : Totemic Call[CS2_049]
+
+Mana : 4
+Enemy secret: False
+
+Friends : 
+Searing Totem[CS2_050][1/1]CAN[True]IDX[0]
+
+Enemy : 
+Spirit Wolf[EX1_tk11][2/3]CAN[True]IDX[0][T]
+Spirit Wolf[EX1_tk11][2/3]CAN[True]IDX[1][T]
+
+Hand : 
+Hex[EX1_246]COST[3]
+Bloodlust[CS2_046]COST[5]
+Lightning Storm[EX1_259]COST[3]
+Azure Drake[EX1_284][4/4]COST[5]
+Hex[EX1_246]COST[3]
+Spirit Claws[KAR_063]-CA[0][1/3]COST[1]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 22 -- EnemyDeck : 22
+Value : 36
+
+@5~4~2~0~0~22~22~0~False~4~False~5~CFM_717*-1*0*2*2*1*2*29*0*0*5*-1*0*False*False*False*False*True*False*False*False*False*False*False*False*False*5*False~0~HERO_02*-1*0*0*0*0*0*66*30*0*9*30*0*False*False*False*False*False*False*False*False*False*False*False*False*False*9*False~HERO_02*-1*0*0*0*0*0*64*30*1*9*30*0*False*False*False*False*True*False*False*False*False*False*False*False*False*9*False~CS2_049*-1*0*0*2*0*0*67*0*0*9*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*9*False~CS2_049*-1*0*0*2*0*0*65*0*0*9*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*9*False~CS2_050*0*0*1*1*0*0*72*1*0*2*1*0*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False~EX1_tk11*0*0*2*2*0*0*73*3*0*1*3*0*False*False*True*False*True*False*False*False*False*False*False*False*False*1*False|EX1_tk11*1*0*2*2*0*0*74*3*0*1*3*0*False*False*True*False*True*False*False*False*False*False*False*False*False*1*False~EX1_246*0*0*0*3*0*0*56*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_046*1*0*0*5*0*0*43*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_259*2*0*0*3*0*0*35*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_284*3*0*4*5*0*0*54*4*0*0*4*1*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|EX1_246*4*0*0*3*0*0*42*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|KAR_063*5*0*1*1*0*3*44*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~AT_052|EX1_238|CS2_051~0~CFM_712_t01|EX1_238|LOE_018|EX1_248~0~False=True=False=True=True=False~1~0~0~False~EX1_238,EX1_238,KAR_063,KAR_063,LOE_018,LOE_018,EX1_012,EX1_565,EX1_565,KAR_073,KAR_073,AT_052,AT_052,EX1_248,EX1_246,EX1_246,EX1_259,EX1_259,EX1_575,EX1_575,KAR_114,CFM_061,CFM_061,EX1_284,EX1_284,CS2_046,OG_028,OG_028,NEW1_010,EX1_298~0~0~0~0~0~False~False~4~False~0~1~

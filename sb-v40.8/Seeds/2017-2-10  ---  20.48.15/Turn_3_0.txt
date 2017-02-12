@@ -1,0 +1,31 @@
+Board --- Tyrande Whisperwind(30/0-30/0)Malfurion Stormrage 
+
+
+AbilityFriend : Lesser Heal[CS1h_001]
+AbilityEnemy : Shapeshift[CS2_017]
+
+Mana : 4
+Enemy secret: False
+
+Friends : 
+Acolyte of Pain[EX1_007][1/3]CAN[True]IDX[0]
+
+Enemy : 
+Silverback Patriarch[CS2_127][1/4]CAN[True]IDX[0][T]
+
+Hand : 
+Kodorider[AT_099][3/5]COST[6]
+Raza the Chained[CFM_020][5/5]COST[5]
+Shadow Word: Pain[CS2_234]COST[2]
+Northshire Cleric[CS2_235][1/3]COST[1]
+Reno Jackson[LOE_011][4/6]COST[6]
+Kabal Talonpriest[CFM_626][3/4]COST[3]
+
+Secrets : 
+
+FriendDraw : 0 -- EnemyDraw : 0
+FriendFatigue : 0 -- EnemyFatigue : 0
+FriendDeck : 23 -- EnemyDeck : 23
+Value : 55
+
+@4~4~1~0~0~23~23~0~False~3~False~5~0~0~HERO_09a*-1*0*0*0*0*0*64*30*0*7*30*0*False*False*False*False*False*False*False*False*False*False*False*False*False*7*False~HERO_06*-1*0*0*0*0*0*66*30*0*7*30*0*False*False*False*False*True*False*False*False*False*False*False*False*False*7*False~CS1h_001_H1*-1*0*0*2*0*0*65*0*0*7*0*0*False*False*False*False*False*False*False*False*False*False*False*False*False*7*False~CS2_017*-1*0*0*2*0*0*67*0*0*7*0*0*False*False*False*False*True*False*False*False*False*False*False*False*False*7*False~EX1_007*0*0*1*3*0*0*17*3*0*2*3*0*False*False*False*False*False*False*False*False*False*False*False*False*False*2*False~CS2_127*0*0*1*3*0*0*48*4*0*1*4*0*False*False*True*False*True*False*False*False*False*False*False*False*False*1*False~AT_099*0*0*3*6*0*0*15*5*0*0*5*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*True|CFM_020*1*0*5*5*0*0*8*5*0*0*5*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_234*2*0*0*2*0*0*33*0*0*0*0*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CS2_235*3*0*1*1*0*0*11*3*0*0*3*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|LOE_011*4*0*4*6*0*0*20*6*0*0*6*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False|CFM_626*5*0*3*3*0*0*12*4*0*0*4*0*False*False*False*False*False*False*True*False*False*False*False*False*False*0*False~0~0~0~GAME_005|CS2_013~0~False=False=False=False=False=False~0~0~0~False~CS1_130,CS2_235,CFM_603,CS2_004,EX1_066,NEW1_021,AT_080,EX1_096,CS2_234,EX1_007,CFM_649,CFM_626,EX1_622,EX1_625,EX1_339,CFM_604,CFM_621,KAR_035,OG_100,OG_234,LOE_111,CS1_112,AT_127,CFM_020,CFM_662,LOE_104,AT_099,LOE_011,EX1_016,AT_018~0~0~0~0~0~False~False~4~False~0~0~

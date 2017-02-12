@@ -54,7 +54,7 @@ namespace ACKTools
 
         private void FillGameHistoryList(string matchHistoryPath, string wronglyIdentifiedPath)
         {
-            MessageBox.Show(matchHistoryPath);
+            //MessageBox.Show(matchHistoryPath);
             List<string> history = File.ReadLines(matchHistoryPath).Reverse().Take(50).ToList();
             List<string> AllDecks = history.Select(q => q.Split('~')).Select(deck => deck[10]).ToList();
 
