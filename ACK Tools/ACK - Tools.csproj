@@ -53,16 +53,16 @@
   <ItemGroup>
     <Reference Include="ACK, Version=7.0.1.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sb-v40.8\Plugins\libs\ACK.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\Plugins\libs\ACK.dll</HintPath>
     </Reference>
     <Reference Include="SmartBotAPI">
-      <HintPath>..\sb-v40.8\SmartBotAPI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotAPI.dll</HintPath>
     </Reference>
     <Reference Include="SmartBotProfiles">
-      <HintPath>..\sb-v40.8\SmartBotProfiles.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotProfiles.dll</HintPath>
     </Reference>
     <Reference Include="SmartBotStats">
-      <HintPath>..\sb-v40.8\SmartBotStats.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotStats.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

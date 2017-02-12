@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Reflection;
 using SmartBot.Plugins.API;
 
@@ -248,7 +247,7 @@ namespace ACK
         public MulliganContainer(string mode, List<string> choices, string opponentClass,
             string ownClass, List<string> myDeckList)
         {
-            Path = AppDomain.CurrentDomain.BaseDirectory;
+            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
 
             Choices = choices;
             OpponentClass = (HeroClass)Enum.Parse(typeof(HeroClass), opponentClass);
@@ -286,7 +285,7 @@ namespace ACK
         }
         public MulliganContainer()
         {
-            Path = AppDomain.CurrentDomain.BaseDirectory;
+            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
             Choices = new List<string>();
             OpponentClass = HeroClass.NONE;
             OwnClass = HeroClass.NONE;
@@ -338,24 +337,20 @@ namespace ACK
             {
                 case 1:
                     if (!HasTurnOne) //Safety net against hardcoded tech cards whose priority would set it to false.
-                    {
-                        HasTurnOne = card.ToString().IsWeapon() || (card.ToString().IsMinion() &&
-                                     GetPriority(card.ToString()) >= minPriority);
-
-                    }
-                        
+                        HasTurnOne = card.ToString().IsMinion() &&
+                                     GetPriority(card.ToString()) >= minPriority;
                     break;
                 case 2:
                     if (!HasTurnTwo) //Safety net against hardcoded tech cards whose priority would set it to false.
 
-                        HasTurnTwo = card.ToString().IsWeapon() || card.ToString().IsMinion() &&
+                        HasTurnTwo = card.ToString().IsMinion() &&
                                      GetPriority(card.ToString()) >= minPriority;
                     break;
                 case 3:
                     if (!HasTurnThree)
                         //Safety net against hardcoded tech cards whose priority would set it to false.
 
-                        HasTurnThree = card.ToString().IsWeapon() || card.ToString().IsMinion() &&
+                        HasTurnThree = card.ToString().IsMinion() &&
                                        GetPriority(card.ToString()) >= minPriority;
                     break;
                 default:
@@ -384,7 +379,6 @@ namespace ACK
         /// <param name="cards"></param>
         public void Allow(params object[] cards)
         {
-            Log("Allow Array");
             foreach (var q in cards)
             {
                 Allow(q.ToString(), cards.Count(c => c == q) > 1);
@@ -411,13 +405,11 @@ namespace ACK
         /// <param name="cards">List of cards</param>
         public void Allow(int count, params object[] cards)
         {
-            Log($"Going through <{count}> cards {string.Join("/", cards)}");
             int i = 0;
             foreach (var q in cards)
             {
                 if (i >= count) break;
-                if (!Choices.Contains(q.ToString())) continue;
-               
+                if (!Choices.Contains(q)) continue;
                 Allow(q);
                 i++;
             }
@@ -435,25 +427,6 @@ namespace ACK
             if (!bypriority)
                 Allow(count, cards);
             else Allow(count, cards.OrderByDescending(c=> MinionPriorityTable[c.ToString()]));
-        }
-        /// <summary>
-        /// Allow select number of cards from list of cards when we have a coin
-        /// </summary>
-        /// <param name="count"></param>
-        /// <param name="cards"></param>
-        public void AllowWithCoin(int count, params object[] cards)
-        {
-            if (!Coin) return;
-            Allow(count, cards);
-        }
-        /// <summary>
-        /// Allow cards when we have coin
-        /// </summary>
-        /// <param name="cards"></param>
-        public void AllowWithCoin(params object[] cards)
-        {
-            if (!Coin) return;
-            Allow(cards);
         }
         /// <summary>
         /// Debug Log
@@ -725,7 +698,7 @@ namespace ACK
             {"FP1_009",4}, //[2/8]Deathlord [3 mana] [NONE card]
             {"FP1_023",5}, //[3/4]Dark Cultist [3 mana] [PRIEST card]
             {"FP1_027",2}, //[1/4]Stoneskin Gargoyle [3 mana] [NONE card]
-            {"FP1_029",3}, //[4/4]Dancing Swords [3 mana] [NONE card]
+            {"FP1_029",5}, //[4/4]Dancing Swords [3 mana] [NONE card]
             {"GVG_027",3}, //[2/2]Iron Sensei [3 mana] [ROGUE card]
             {"GVG_032",2}, //[2/4]Grove Tender [3 mana] [DRUID card]
             {"GVG_044",5}, //[3/4]Spider Tank [3 mana] [NONE card]
@@ -757,8 +730,8 @@ namespace ACK
             {"AT_086",3}, //[4/3]Saboteur [3 mana] [NONE card]
             {"AT_087",3}, //[2/1]Argent Horserider [3 mana] [NONE card]
             {"AT_092",0}, //[5/2]Ice Rager [3 mana] [NONE card]
-            {"AT_095",3}, //[2/2]Silent Knight [3 mana] [NONE card]
-            {"AT_100", 3}, //[3/3]Silver Hand Regent [3 mana] [NONE card]
+            {"AT_095",5}, //[2/2]Silent Knight [3 mana] [NONE card]
+            {"AT_100", 6}, //[3/3]Silver Hand Regent [3 mana] [NONE card]
             {"AT_106",2}, //[4/3]Light's Champion [3 mana] [NONE card]
             {"AT_110",4}, //[2/5]Coliseum Manager [3 mana] [NONE card]
             {"AT_115",1}, //[2/2]Fencing Coach [3 mana] [NONE card]
@@ -820,7 +793,7 @@ namespace ACK
             {"GVG_078",5}, //[4/5]Mechanical Yeti [4 mana] [NONE card]
             {"GVG_091",4}, //[2/5]Arcane Nullifier X-21 [4 mana] [NONE card]
             {"GVG_094",0}, //[1/4]Jeeves [4 mana] [NONE card]
-            {"GVG_096", 5}, //[4/3]Piloted Shredder [4 mana] [NONE card]
+            {"GVG_096", 8}, //[4/3]Piloted Shredder [4 mana] [NONE card]
             {"GVG_107",0}, //[3/2]Enhance-o Mechano [4 mana] [NONE card]
             {"GVG_109",0}, //[4/1]Mini-Mage [4 mana] [NONE card]
             {"GVG_122",0}, //[2/5]Wee Spellstopper [4 mana] [MAGE card]
@@ -834,7 +807,7 @@ namespace ACK
             {"AT_012",3}, //[5/4]Spawn of Shadows [4 mana] [PRIEST card]
             {"AT_017",1}, //[2/6]Twilight Guardian [4 mana] [NONE card]
             {"AT_019",0}, //[1/1]Dreadsteed [4 mana] [WARLOCK card]
-            {"AT_039", 4}, //[5/4]Savage Combatant [4 mana] [DRUID card]
+            {"AT_039", 6}, //[5/4]Savage Combatant [4 mana] [DRUID card]
             {"AT_040",0}, //[4/4]Wildwalker [4 mana] [DRUID card]
             {"AT_047",0}, //[4/4]Draenei Totemcarver [4 mana] [SHAMAN card]
             {"AT_067",0}, //[5/3]Magnataur Alpha [4 mana] [WARRIOR card]
@@ -913,8 +886,8 @@ namespace ACK
             {AllCards.Swashburglar, 4},
             {AllCards.SilverwareGolem, 1},
             {AllCards.MalchezaarsImp, 3},
-            {AllCards.Barnes, 1},
-            {AllCards.Moroes, 1},
+            {AllCards.Barnes, 4},
+            {AllCards.Moroes, 2},
             {AllCards.VioletIllusionist, 2},
             {AllCards.Zoobot, 1},
             {AllCards.Arcanosmith, 2},
@@ -926,12 +899,12 @@ namespace ACK
             {AllCards.PriestoftheFeast, 5},
             {AllCards.WickedWitchdoctor, 2},
 
-            {AllCards.Alleycat, 3},
+            {AllCards.Alleycat, 4},
             {AllCards.KabalLackey, 2},
             {AllCards.GrimscaleChum, 3},
             {AllCards.MeanstreetMarshal, 1},
-            {AllCards.MistressofMixtures, 5},
-            {AllCards.PatchesthePirate, -1},
+            {AllCards.MistressofMixtures, 4},
+            {AllCards.PatchesthePirate, -1000},
             {AllCards.SmallTimeBuccaneer, 3},
             {AllCards.WeaselTunneler, 1},
             {AllCards.TroggBeastrager, 3},

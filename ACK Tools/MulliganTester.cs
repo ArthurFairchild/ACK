@@ -46,7 +46,7 @@ namespace ACKTools
             }
             myStyleBox.Items.AddRange(new object[] { ACK.DeckClassification.Style.Aggro, ACK.DeckClassification.Style.Midrange, ACK.DeckClassification.Style.Control });
             enemyStyleBox.Items.AddRange(new object[] { ACK.DeckClassification.Style.Aggro, ACK.DeckClassification.Style.Midrange, ACK.DeckClassification.Style.Control });
-            modeBox.Items.AddRange(new object[] { Bot.Mode.Arena, Bot.Mode.RankedStandard, Bot.Mode.RankedWild});
+            modeBox.Items.AddRange(new object[] { Bot.Mode.Arena, Bot.Mode.RankedStandard });
             myStyleBox.SelectedIndex = 0;
             enemyStyleBox.SelectedIndex = 0;
             modeBox.SelectedIndex = 0;
@@ -467,23 +467,12 @@ namespace ACKTools
             checkBox1_CheckedChanged(sender, e);
             richTextBox2.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].ClassificationSummary()}";
             richTextBox3.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].MulliganCoreSummary()}";
-            richTextBox4.Text =
-                $"{string.Join("\n", _ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckList.Select(c => new MinimalCardTemplate(c).Name))}";
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            GenerateMulligan();
         }
     }
 

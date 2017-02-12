@@ -1,8 +1,0 @@
-c:\Users\artur\AppData\Local\Temp\gfkg2bwr.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\43yigfgy.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\hnsb4tf5.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\32igjfxi.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\5h5st3ab.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\s2depu2n.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\awvwcxbz.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
-c:\Users\artur\AppData\Local\Temp\0sbikedu.0.cs(133,25) : error CS0117: 'SmartBot.Plugins.API.Cards' does not contain a definition for 'board'
