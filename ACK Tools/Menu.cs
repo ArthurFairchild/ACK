@@ -97,12 +97,7 @@ namespace ACKTools
                 MaximizeBox = false,
                 MinimizeBox = false
             };
-            mulliganTesterForm = new MulliganTester(_smartBotPath, db)
-            {
-                FormBorderStyle = FormBorderStyle.FixedSingle,
-                MaximizeBox = false,
-                MinimizeBox = false
-            };
+            
 
         }
 
@@ -154,7 +149,12 @@ namespace ACKTools
         }
         private void mulliganTesterBtn_Click(object sender, EventArgs e)
         {
-           
+            mulliganTesterForm = new MulliganTester(_smartBotPath, db)
+            {
+                FormBorderStyle = FormBorderStyle.FixedSingle,
+                MaximizeBox = false,
+                MinimizeBox = false
+            };
             mulliganTesterForm.Show();
             
 

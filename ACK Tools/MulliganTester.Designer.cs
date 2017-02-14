@@ -275,7 +275,7 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.button1.Location = new System.Drawing.Point(8, 269);
+            this.button1.Location = new System.Drawing.Point(6, 277);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(313, 37);
             this.button1.TabIndex = 52;
@@ -292,7 +292,7 @@
             this.tabControl1.Location = new System.Drawing.Point(397, 15);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(634, 430);
+            this.tabControl1.Size = new System.Drawing.Size(672, 430);
             this.tabControl1.TabIndex = 53;
             // 
             // tabPage3
@@ -333,7 +333,7 @@
             this.tabPage3.Controls.Add(this.reqThreeFour);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(626, 404);
+            this.tabPage3.Size = new System.Drawing.Size(664, 404);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Settings";
             // 
@@ -360,7 +360,7 @@
             // applySettingsBtn
             // 
             this.applySettingsBtn.BackColor = System.Drawing.SystemColors.Control;
-            this.applySettingsBtn.Location = new System.Drawing.Point(8, 312);
+            this.applySettingsBtn.Location = new System.Drawing.Point(6, 320);
             this.applySettingsBtn.Name = "applySettingsBtn";
             this.applySettingsBtn.Size = new System.Drawing.Size(313, 36);
             this.applySettingsBtn.TabIndex = 24;
@@ -667,7 +667,7 @@
             this.tabPage5.Controls.Add(this.debugFlowRchTxtBx);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(626, 404);
+            this.tabPage5.Size = new System.Drawing.Size(664, 404);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Flow Debug";
             // 
@@ -718,7 +718,7 @@
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage6.Size = new System.Drawing.Size(374, 404);
             this.tabPage6.TabIndex = 0;
-            this.tabPage6.Text = "Testing";
+            this.tabPage6.Text = "Specific Testing";
             // 
             // label18
             // 
@@ -760,7 +760,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1071, 449);
+            this.ClientSize = new System.Drawing.Size(1090, 461);
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

@@ -410,20 +410,20 @@ namespace ACK
             {
                 case 1:
                     if (!HasTurnOne) //Safety net against hardcoded tech cards whose priority would set it to false.
-                        HasTurnOne = card.ToString().IsMinion() &&
+                        HasTurnOne = card.ToString().IsWeapon() || card.ToString().IsMinion() && Choices.Contains(card.ToString())&&
                                      GetPriority(card.ToString()) >= minPriority;
                     break;
                 case 2:
                     if (!HasTurnTwo) //Safety net against hardcoded tech cards whose priority would set it to false.
 
-                        HasTurnTwo = card.ToString().IsMinion() &&
+                        HasTurnTwo = card.ToString().IsWeapon() || card.ToString().IsMinion() && Choices.Contains(card.ToString()) &&
                                      GetPriority(card.ToString()) >= minPriority;
                     break;
                 case 3:
                     if (!HasTurnThree)
                         //Safety net against hardcoded tech cards whose priority would set it to false.
 
-                        HasTurnThree = card.ToString().IsMinion() &&
+                        HasTurnThree = card.ToString().IsWeapon() || card.ToString().IsMinion() && Choices.Contains(card.ToString()) &&
                                        GetPriority(card.ToString()) >= minPriority;
                     break;
                 default:
@@ -503,6 +503,25 @@ namespace ACK
             else Allow(count, cards.OrderByDescending(c=> MinionPriorityTable[c.ToString()]));
         }
         /// <summary>
+        /// Allow cards if we have coin (if you forget to add it in main code)
+        /// </summary>
+        /// <param name="cards"></param>
+        public void AllowOnCoin(params object[] cards)
+        {
+            if (!Coin) return;
+            Allow(cards);
+        }
+        /// <summary>
+        /// Allow x amount of cards in that order if we have a coin
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="cards"></param>
+        public void AllowOnCoin(int count, params object[] cards)
+        {
+            if (!Coin) return;
+            Allow(count, cards);
+        }
+        /// <summary>
         /// For Advanced Users Only
         /// 
         /// </summary>
@@ -548,8 +567,89 @@ namespace ACK
 
 
         }
+        /// <summary>
+        /// Returns true if we are one of the classes
+        /// </summary>
+        /// <param name="classes"></param>
+        /// <returns></returns>
+        public bool Iam(params HeroClass[] classes)
+        {
+            return classes.Contains(OwnClass);
+        }
+        /// <summary>
+        /// returns true if we are one of the styles passed
+        /// </summary>
+        /// <param name="styles">Array of all Styles we want to check against</param>
+        /// <returns></returns>
+        public bool Iam(params DeckClassification.Style[] styles)
+        {
+            return styles.Contains(MyStyle);
+        }
+        /// <summary>
+        /// Overloa of params Iam that looks through styles
+        /// </summary>
+        /// <param name="styles"></param>
+        /// <returns></returns>
+        public bool Iam(List<DeckClassification.Style> styles)
+        {
+            return styles.Contains(MyStyle);
+        }
+        /// <summary>
+        /// Oberload of param Iam that looks through classes
+        /// </summary>
+        /// <param name="heroClasses"></param>
+        /// <returns></returns>
+        public bool Iam(List<HeroClass> heroClasses)
+        {
+            return heroClasses.Contains(OwnClass);
+        }
+        /// <summary>
+        /// Advance Usage of Iam that parses all styles and heroclasses and returns true if at least 1 combination of style and class is met
+        /// </summary>
+        /// <param name="paramObjects"></param>
+        /// <returns></returns>
+        public bool Iam(params object[] paramObjects)
+        {
+            Log($"Parameters passed in Iam method: {string.Join(",", paramObjects)}");
+            List<HeroClass> classes = paramObjects.OfType<HeroClass>().ToList();
+            Log($"All passed classes {string.Join(",", classes)} {classes.Count}");
+            var styles = paramObjects.OfType<DeckClassification.Style>().ToList();
+            Log($"All passed styles {string.Join(",", styles)} {styles.Count}");
+            int skipValues = classes.Count + styles.Count;
+            object[] unknownObjects = paramObjects.Skip(skipValues).ToArray();
+            if (unknownObjects.Length > 0)
+            {
+                Log($"Error occured, unparsed objects: {string.Join(", ", styles)} {styles.Count}");
+                return false;
+            }
+            if (styles.Count > 0 && classes.Count > 0)
+                return Iam(classes) && Iam(styles);
+            if (styles.Count == 0 && classes.Count > 0)
+                return Iam(classes);
+            if (styles.Count > 0 && classes.Count == 0)
+                return Iam(styles);
+            return false;
+        }
 
        
+        /// <summary>
+        /// Returns true if we are against X class
+        /// </summary>
+        /// <param name="classes">List of classes to compare with</param>
+        /// <returns></returns>
+        public bool Against(params HeroClass[] classes)
+        {
+            return classes.Contains(OpponentClass);
+        }
+        /// <summary>
+        /// Returns true if we are against style
+        /// </summary>
+        /// <param name="styles"></param>
+        /// <returns></returns>
+        public bool Against(params DeckClassification.Style[] styles)
+        {
+            return styles.Contains(EnemyStyle);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -635,6 +735,25 @@ namespace ACK
             }
             MinionPriorityTable[id.ToString()] = value;
             Log($"Updated {temp.Name} with new value.");
+        }
+        /// <summary>
+        /// Increment Card values by X
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="cards"></param>
+        public void UpdatePrioritTable(int value, params object[] cards)
+        {
+            foreach (var q in cards)
+            {
+                var temp = new MinimalCardTemplate(q.ToString());
+                if (temp.Type != CardType.MINION || temp.Cost > 4)
+                {
+                    var logmessage = $"{temp.Name} was not updated because " + (temp.Type != CardType.MINION ? "Not a minion" : "Cost is too high to be in Mulligan Priority Table. Hardcode it to keep");
+                    Log(logmessage);
+                    continue;
+                }
+                MinionPriorityTable[q.ToString()] += value;
+            }
         }
 
         public int GetPriority(string card)

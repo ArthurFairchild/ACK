@@ -123,7 +123,7 @@ namespace ACKTools
         {
             //applySettingsBtn_Click(sender, e);
             if (!coinBox.Checked && cardOffer4.Text != "")
-                cardOffer4.SelectedItem = null;
+                coinBox.Checked = true;
 
             List<Card.Cards> myChoices = new List<Card.Cards>();
             Card.CClass myClass = Card.CClass.SHAMAN;
@@ -162,6 +162,22 @@ namespace ACKTools
                 richTextBox1.Text += $"[{q.Template().Cost} mana] [{q.Template().Atk}/{q.Template().Health}] {q.Template().Name}\n";
 
             }
+            List<Card.Cards> deck = new List<Card.Cards>();
+
+            using (StringReader deckReader = new StringReader(this.myDeckText.Text))
+            {
+                string line = deckReader.ReadLine();
+
+                if (line != null)
+                {
+                    var data = line.Split(',');
+                    deck.AddRange(data.TakeWhile(q => q.Length >= 1).Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)));
+                }
+            }
+            richTextBox1.Text += $"\n\n{myStyleBox.SelectedItem}~{enemyStyleBox.SelectedItem}~" +
+                             $"{oneDropCount.Value}~{oneDropCoin.Value}~{twoDropCount.Value}~{TwoDropCoin.Value}~{threeDrop.Value}~{threeDropCoin.Value}" +
+                             $"~{fourDrop.Value}~{fourDropCoin.Value}~{reqOneTwo.Checked}~{reqTwoThree.Checked}~{reqThreeFour.Checked}~{coinSkip.Checked}~{allowDragons.Checked}~" +
+                             $"{modeBox.SelectedItem}~{string.Join(",", deck)}";
 
 
         }
@@ -468,6 +484,7 @@ namespace ACKTools
             myClass.SelectedIndex =
                 _heroIndex[_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckClass.ToString()];
             checkBox1_CheckedChanged(sender, e);
+            
             richTextBox2.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].ClassificationSummary()}";
             richTextBox3.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].MulliganCoreSummary()}";
             selectedDeckRtxt.Text = $"{string.Join("\n", _ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckList.Select(c=> new MinimalCardTemplate(c).Name))}";

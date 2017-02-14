@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using ACK;
 using SmartBot.Database;
 using SmartBot.Mulligan;
-using SmartBot.Plugins;
 using SmartBot.Plugins.API;
 
 //Version ~3.01
@@ -51,6 +49,7 @@ namespace MulliganProfiles
                 dc = new DeckClassification(Bot.CurrentDeck().Cards);
                 mc.LogData = false; //No need to debug log when bot is succesfully running
                 mc.Log(mc.ToString());
+                AssignCoreMaxes(mc, dc);
                 MulliganAck(mc, dc);
                 return mc.GetCardsWeKeep().ToCards();
             }
@@ -64,6 +63,7 @@ namespace MulliganProfiles
                // mc.LogData = true;
                 mc.Log(mc.ToString());
                 mc.Log("\n"+dc.ToString() +"\n\n");
+                AssignCoreMaxes(mc, dc);
                 MulliganAck(mc, dc);
                 return mc.GetCardsWeKeep().ToCards();
 
@@ -71,8 +71,87 @@ namespace MulliganProfiles
            
         }
 
-       
+        private static void AssignCoreMaxes(MulliganContainer mc, DeckClassification dc)
+        {
+            
+            try
+            {
+                var test =
+                    Bot.GetPlugins().Find(c => c.DataContainer.Name == "ACK - Mulligan Container").GetProperties();
+                mc.Log("Mulligan Container plugin communication was succesful");
+                var values = (from q in test where q.Value is int select (int)q.Value).ToList();
+                mc.Log(string.Join("/", values));
+                var curve = (from q in test where q.Value is bool select (bool)q.Value).ToList();
+                mc.Log(string.Join("/", curve));
+                mc.CoreMaxes = new MulliganContainer.MulliganCoreData(values);
+                mc.CoreMaxes.UpdateStrictCurve(curve);
 
+                mc.Log("Strickt Requirments were setup without an issue");
+                mc.Log("Overrwriten Mulligan Core Maxes: " + mc.CoreMaxes.ToString());
+
+            }
+            catch (NullReferenceException pluginNotFound)
+            {
+                mc.Log("Fragile Code entered because of plugin Mulligan Container was not properly read:" + pluginNotFound.ToString());
+                mc.Log(AppDomain.CurrentDomain.BaseDirectory + "MulliganProfiles\\ACK-MulliganTester.ini");
+                using (StreamReader sr = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
+                {
+                    mc.Log("Reading Mulligan Tester.ini");
+                    var readLine = sr.ReadLine();
+                    if (readLine != null)
+                    {
+                        var info = readLine.Split('~');
+                        mc.Log("Split settings into " + string.Join("/", info));
+                        mc.MyStyle = (DeckClassification.Style)Enum.Parse(typeof(DeckClassification.Style), info[0]);
+                        mc.Log("Parsed my Style");
+                        mc.EnemyStyle = (DeckClassification.Style)Enum.Parse(typeof(DeckClassification.Style), info[1]);
+                        mc.Log("Parsed enemy Style");
+                        var values = new List<int>();
+
+                        foreach (var q in info)
+                        {
+                            try
+                            {
+                                int val = int.Parse(q);
+                                values.Add(val);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+                        mc.Log("Parsed Core maxes int " + string.Join("/", values));
+                        mc.CoreMaxes = new MulliganContainer.MulliganCoreData(values);
+                        mc.Log("New Core Maxes setuo");
+                        mc.CoreMaxes.UpdateStrictCurve(new List<bool>() { Convert.ToBoolean(info[10]), Convert.ToBoolean(info[11]), Convert.ToBoolean(info[12]) });
+                        mc.AllowCoinSkip = Convert.ToBoolean(info[13]) && mc.Coin;
+                        mc.Log("New Strict Curve setup");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                mc.Log("Fragile Code entered because of some bs" + e.ToString());
+                switch (dc.DeckStyle)
+                {
+                    case DeckClassification.Style.Aggro:
+                        mc.CoreMaxes = new MulliganContainer.MulliganCoreData(2, 3, 2, 3, 1, 2, 0, 1, true, true, false);
+                        break;
+                    case DeckClassification.Style.Midrange:
+                        mc.CoreMaxes = new MulliganContainer.MulliganCoreData(2, 2, 3, 4, 2, 2, 0, 1, false, true, false);
+                        break;
+                    case DeckClassification.Style.Control:
+                        mc.CoreMaxes = new MulliganContainer.MulliganCoreData(1, 1, 2, 4, 2, 2, 1, 2, false, false, false);
+
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+
+        }
 
 
         private void MulliganAck(MulliganContainer mc, DeckClassification dc)
@@ -83,13 +162,15 @@ namespace MulliganProfiles
             int allowed3Drops = mc.Coin ? mc.CoreMaxes.Max3DropsCoin : mc.CoreMaxes.Max3Drops;
             int allowed4Drops = mc.Coin ? mc.CoreMaxes.Max4DropsCoin : mc.CoreMaxes.Max4Drops;
             mc.Log("[ACK Mulligan Begins]");
+            AdjustInteractionsBasedOnCombinations(mc, dc);
             //1 Drops
             foreach (
                 var q in
-                mc.OneDrops.Where(q => q.IsMinion() && mc.GetPriority(q) >= 2)
+                mc.OneDrops.Where(q => (q.IsWeapon() || q.IsMinion()) && mc.GetPriority(q) >= 2)
                     .OrderByDescending(mc.GetPriority)
                     .Take(allowed1Drops))
             {
+                mc.Log("One Drop "+q);
                 mc.HasTurnOne = true;
                 mc.Allow(q, mc.GetPriority(q) > 5);
             }
@@ -102,7 +183,7 @@ namespace MulliganProfiles
             //2 Drops
             foreach (
                 var q in
-                mc.TwoDrops.Where(q => q.IsMinion() && mc.GetPriority(q) >= 2)
+                mc.TwoDrops.Where(q => (q.IsWeapon() || q.IsMinion()) && mc.GetPriority(q) >= 2)
                     .OrderByDescending(mc.GetPriority)
                     .Take(allowed2Drops))
             {
@@ -119,7 +200,7 @@ namespace MulliganProfiles
             //3 Drops
             foreach (
                 var q in
-                mc.ThreeDrops.Where(q => q.IsMinion() && mc.GetPriority(q) >= 1)
+                mc.ThreeDrops.Where(q => (q.IsWeapon() || q.IsMinion()) && mc.GetPriority(q) >= 1)
                     .OrderByDescending(mc.GetPriority)
                     .Take(allowed3Drops))
             {
@@ -135,7 +216,7 @@ namespace MulliganProfiles
 
             foreach (
                 var q in
-                mc.FourDrops.Where(q => q.IsMinion() && mc.GetPriority(q) >= 4)
+                mc.FourDrops.Where(q => (q.IsWeapon() || q.IsMinion()) && mc.GetPriority(q) >= 4)
                     .OrderByDescending(mc.GetPriority)
                     .Take(allowed4Drops))
             {
@@ -146,6 +227,37 @@ namespace MulliganProfiles
 
             HandleSpecialScenarios(mc, dc);
             mc.Log("[ACK Mulligan End]");
+        }
+
+        private void AdjustInteractionsBasedOnCombinations(MulliganContainer mc, DeckClassification dc)
+        {
+            if (mc.Choices.Any(c => c.IsWeapon() && CardTemplate.LoadFromId(c).Cost <= 3) && mc.Iam(AGGRO))
+                mc.UpdatePriorityTable(Cards.SouthseaDeckhand.ToString(), 2);
+            if (dc.Dragons)
+            {
+                mc.Log("\nEntered {GoThroughDragons}");
+
+                mc.UpdatePriorityTable(Cards.TwilightWhelp, 3);
+                mc.UpdatePriorityTable(Cards.WyrmrestAgent, mc.Coin ? 7 : 3);
+                if (mc.Coin) mc.Allow(Cards.TwilightGuardian);
+                mc.UpdatePriorityTable(Cards.AlexstraszasChampion, 3);
+                if (mc.EnemyStyle != DeckClassification.Style.Aggro)
+                    mc.UpdatePriorityTable(Cards.TwilightDrake, 4);
+                mc.UpdatePriorityTable(Cards.TwilightGuardian, mc.Coin ? 5 : 2);
+                if (mc.Against(Priest))
+                {
+                    mc.UpdatePriorityTable(Cards.TwilightDrake, mc.Coin ? 5 : 2);
+                    mc.UpdatePriorityTable(Cards.DrakonidOperative, mc.Coin ? 768 : 3);
+                    mc.Allow(Cards.DrakonidOperative);//He is above 5 mana, and won't be handled by core
+                }
+                if (mc.Choices.Contains(Cards.AlexstraszasChampion.ToString()) && mc.Choices.Intersect(dc.DragonCards).Any())
+                {
+                    mc.Log("Allowing Dragon Activator for Alextraszas Champion");
+                    mc.Allow(mc.Choices.Intersect(dc.DragonCards).OrderBy(c => CardTemplate.LoadFromId(c).Cost).ToList().First());
+                }
+                mc.Log("Existed {GoThroughDragons}\n");
+            }
+
         }
 
         private void AdjustUserPriorities(MulliganContainer mc, DeckClassification dc)
@@ -189,18 +301,41 @@ namespace MulliganProfiles
                 mc.Allow(ThreatHandler.Intersect(mc.Choices.ToCards()).First(), false);
 
             #region spell/weapon handler
-
+           
 
             switch (mc.OwnClass)
             {
-                case HeroClass.SHAMAN:
+                case HeroClass.SHAMAN://Cards like Totem Golem Are handled by Core
                     //_whiteList.AddInOrder(1, mc.Choices, false, Cards.StormforgedAxe, Cards.Powermace);
                     //mc.Allow( Cards.RockbiterWeapon, false); // [1 Cost]
                     //mc.Allow( !hasGood2 && mc.Coin ? Cards.FarSight : Card.Cards.GAME_005, false); // [3 Cost]
                     //mc.Allow( Cards.FeralSpirit, false); // [3 Cost]
                     //mc.Allow( Cards.JadeClaws, false);
                     mc.Log("[We are Shaman]");
-                    mc.AllowAgainst(Warlock, Shaman, Mage, Cards.Hex, Cards.AlAkirtheWindlord, Cards.Hex, Cards.LightningStorm);
+                    mc.Allow(1, Cards.JadeClaws, Cards.SpiritClaws);
+                    mc.AllowOnCoin(Cards.TunnelTrogg, Cards.TunnelTrogg , Cards.FeralSpirit);
+                    mc.AllowAsCombination(Cards.JadeClaws, Cards.TunnelTrogg);
+                    mc.AllowAsCombination(Cards.BloodmageThalnos, Cards.SpiritClaws);
+                    mc.AllowAsCombination(Cards.SmallTimeBuccaneer, Cards.SpiritClaws);
+                    mc.AllowOnCoin(mc.HasTurnOne && mc.HasTurnTwo ? Cards.FlamewreathedFaceless: Nothing);
+                    mc.Log(mc.HasTurnOne+ " " +mc.HasTurnTwo);
+                    if (!mc.HasTurnOne && !mc.Choices.Contains(Cards.JadeClaws.ToString())) mc.Allow(Cards.SpiritClaws);//automatic filling of HasTun allows us to do this sorcery.
+                    if (mc.Mode.Contains("Wild"))
+                        mc.AllowAgainst(AGGRO, Cards.LightningBolt);
+
+                    if (mc.Against(Shaman, Warrior, Rogue))
+                    {
+                        mc.Allow(1, Cards.JadeClaws, Cards.SpiritClaws);
+                        mc.AllowAgainst(Shaman, Cards.LightningStorm);
+                        if(mc.Against(Warrior))
+                        {
+                            mc.AllowAgainst(AGGRO, mc.Coin ? Cards.LightningBolt: Nothing);
+                            mc.AllowAsCombination(Cards.LightningBolt, Cards.TunnelTrogg);//We would already keep lighting bolt against aggro in wild automatically. This is a safety net.
+                            mc.Allow(1, Cards.MaelstromPortal, Cards.LightningStorm);
+                        }
+                        mc.AllowAgainst(CONTROL, Rogue, Cards.Hex, Cards.ManaTideTotem);
+                        mc.AllowAgainst(Rogue, Cards.Hex); //Against Edwin/Questing
+                    }
                     //mc.AllowAgainst(AGGRO , Shaman, Cards.Hex, Cards.Hex, Cards.LightningBolt, Cards.LightningStorm);
                     mc.Log("[/We are Shaman]");
 

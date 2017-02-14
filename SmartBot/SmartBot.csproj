@@ -58,7 +58,7 @@
     <Compile Include="MulliganProfiles\Default.cs" />
     <Compile Include="Plugins\ACK - Bundle.cs" />
     <Compile Include="Plugins\ACK - History.cs" />
-    <Compile Include="Plugins\ACK - Mulligan Core.cs" />
+    <Compile Include="Plugins\ACK - Mulligan Container.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
