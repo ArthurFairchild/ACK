@@ -137,7 +137,7 @@ namespace ACK
             /// <returns></returns>
             public override string ToString()
             {
-                return string.Format("Container " + Max1Drops + Max1DropsCoin + Max2Drops + Max2DropsCoin + Max3Drops + Max3DropsCoin + Max4Drops + Max4DropsCoin );
+                return string.Format($"Container\n{Max1Drops} {Max1DropsCoin}\n{Max2Drops} {Max2DropsCoin} \n{Max3Drops} {Max3DropsCoin} \n{Max4Drops} {Max4DropsCoin} ");
             }
         }
         /// <summary>
@@ -231,9 +231,18 @@ namespace ACK
         /// Information about my choices From Classification
         /// </summary>
         public DeckClassification MyChoicesClassification { get; set; }
-
+        /// <summary>
+        /// Cards We Keep
+        /// </summary>
         public List<string> CardsToKeep { get; set; }
-
+        /// <summary>
+        /// Use Coin as ramp
+        /// </summary>
+        public bool AllowCoinSkip { get; set; }
+        /// <summary>
+        /// Allow heavy dragon activators for early game minion that require "If you are holding a dragon"
+        /// </summary>
+        public bool AllowDragonActivators { get; set; }
         private string Path { get; set; }
 
         /// <summary>
@@ -247,7 +256,7 @@ namespace ACK
         public MulliganContainer(string mode, List<string> choices, string opponentClass,
             string ownClass, List<string> myDeckList)
         {
-            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+            Path = AppDomain.CurrentDomain.BaseDirectory;
 
             Choices = choices;
             OpponentClass = (HeroClass)Enum.Parse(typeof(HeroClass), opponentClass);
@@ -282,10 +291,13 @@ namespace ACK
             WhiteList = new Dictionary<string, bool>();
             CardsToKeep = new List<string>();
             CoreMaxes = new MulliganCoreData();
+            AllowDragonActivators = true;
+            AllowCoinSkip = true;
         }
         public MulliganContainer()
         {
-            Path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+            Path = AppDomain.CurrentDomain.BaseDirectory;
+
             Choices = new List<string>();
             OpponentClass = HeroClass.NONE;
             OwnClass = HeroClass.NONE;
@@ -310,7 +322,68 @@ namespace ACK
             WhiteList = new Dictionary<string, bool>();
             CardsToKeep = new List<string>();
             CoreMaxes = new MulliganCoreData();
+            AllowDragonActivators = true;
+            AllowCoinSkip = true;
+
         }
+
+        /// <summary>
+        /// Mulligan Container Contructor. Requires Path to MulliganTester.ini
+        /// </summary>
+        /// <param name="mtPath">path to ACK-MulliganTester.ini</param>
+        /// <param name="choices">Choices</param>
+        /// <param name="opponentClass">Opponent Class</param>
+        /// <param name="ownClass">Our Class</param>
+        public MulliganContainer(string mtPath , List<string> choices, string opponentClass, string ownClass)
+        {
+            //{0:My Style}, {1:Enemy Style}, {2:OneDrops}, {3:OneDropsCoint}, {4:TwoDrops}, {5:TwoDropsCoin},
+            //{ 6:ThreeDrops}, {7:ThreeDropsCoin}, {8:FourDrops}, {9:FourDropsCoin},{10:req1},{11:req2},{12:req3},{13:CoinSkip},{14:AllowDragons},{15:Deck}, 
+
+            Path = AppDomain.CurrentDomain.BaseDirectory;
+            var _mulliganTesterObjects = File.ReadAllText(mtPath).Split('~').ToList();
+
+            Choices = choices;
+            OpponentClass = (HeroClass)Enum.Parse(typeof(HeroClass), opponentClass);
+            OwnClass = (HeroClass)Enum.Parse(typeof(HeroClass), ownClass);
+            Coin = choices.Count > 3;
+
+            LogData = false;
+            MyDeck = _mulliganTesterObjects[16].Split(',').ToList();
+            MyDeckClassification = new DeckClassification(MyDeck, OwnClass);
+            MyChoicesClassification = new DeckClassification(choices, OwnClass);
+            Mode = _mulliganTesterObjects[15];
+
+            MyStyle = (DeckClassification.Style) Enum.Parse(typeof(DeckClassification.Style),_mulliganTesterObjects[0]);
+            EnemyStyle = (DeckClassification.Style)Enum.Parse(typeof(DeckClassification.Style), _mulliganTesterObjects[1]);
+
+            ZeroDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost == 0).ToList();
+            OneDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost == 1).ToList();
+            TwoDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost == 2).ToList();
+            ThreeDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost == 3).ToList();
+            FourDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost == 4).ToList();
+            FivePlusDrops = Choices.Where(card => new MinimalCardTemplate(card).Cost > 4).ToList();
+            HasTurnOne = false;
+            HasTurnTwo = false;
+            HasTurnThree = false;
+            WhiteList = new Dictionary<string, bool>();
+            CardsToKeep = new List<string>();
+            CoreMaxes = new MulliganCoreData(
+                Convert.ToInt32(_mulliganTesterObjects[2]), Convert.ToInt32(_mulliganTesterObjects[3]),
+                Convert.ToInt32(_mulliganTesterObjects[4]), Convert.ToInt32(_mulliganTesterObjects[5]),
+                Convert.ToInt32(_mulliganTesterObjects[6]), Convert.ToInt32(_mulliganTesterObjects[7]),
+                Convert.ToInt32(_mulliganTesterObjects[8]), Convert.ToInt32(_mulliganTesterObjects[9]),
+                Convert.ToBoolean(_mulliganTesterObjects[10]), 
+                Convert.ToBoolean(_mulliganTesterObjects[11]),
+                Convert.ToBoolean(_mulliganTesterObjects[12])
+
+
+                );
+            AllowCoinSkip = Convert.ToBoolean(_mulliganTesterObjects[13]); 
+            AllowDragonActivators = Convert.ToBoolean(_mulliganTesterObjects[14]);
+        }
+
+       
+
         public List<string> GetCardsWeKeep()
         {
             foreach (var s in from s in Choices
@@ -369,8 +442,8 @@ namespace ACK
         public void Allow(object card, int minPriority, bool value)
         {
             if(value && card.ToString().IsMinion() && GetPriority(card.ToString()) >= minPriority)
-                Allow(card, true);
-            else Allow(card, false);
+                Allow(card.ToString(), true);
+            else Allow(card.ToString(), false);
         }
         /// <summary>
         /// Allows multiple cards to be whitelisted
@@ -379,9 +452,10 @@ namespace ACK
         /// <param name="cards"></param>
         public void Allow(params object[] cards)
         {
+            Log($"Some cards {string.Join(",", cards)}");
             foreach (var q in cards)
             {
-                Allow(q.ToString(), cards.Count(c => c == q) > 1);
+                Allow(q.ToString(), cards.Count(c => c.ToString() == q.ToString()) > 1);
             }
         }
 
@@ -391,7 +465,7 @@ namespace ACK
             Log($"Combination passed {requirment} {comboPiece}");
             if (Choices.Intersect(combo).Count() == 2)
             {
-                Allow(comboPiece, requirment);
+                Allow(comboPiece.ToString(), requirment.ToString());
                 Log($"Allowing {requirment} {comboPiece}");
 
             }
@@ -409,8 +483,8 @@ namespace ACK
             foreach (var q in cards)
             {
                 if (i >= count) break;
-                if (!Choices.Contains(q)) continue;
-                Allow(q);
+                if (!Choices.Contains(q.ToString())) continue;
+                Allow(q.ToString());
                 i++;
             }
         }
@@ -427,6 +501,80 @@ namespace ACK
             if (!bypriority)
                 Allow(count, cards);
             else Allow(count, cards.OrderByDescending(c=> MinionPriorityTable[c.ToString()]));
+        }
+        /// <summary>
+        /// For Advanced Users Only
+        /// 
+        /// </summary>
+        /// <param name="unparsedObjects">Takes all types as parameters and parses in order Class, Enemy Style, list of cards</param>
+        public void AllowAgainst(params object[] unparsedObjects)
+        {
+            Log($"All {string.Join(",", unparsedObjects)}");
+            List<HeroClass> classes = unparsedObjects.OfType<HeroClass>().ToList();
+            Log($"Classes {string.Join(",",classes)} {classes.Count}");
+            var styles = unparsedObjects.OfType<DeckClassification.Style>().ToList();
+            Log($"Styles {string.Join(",", styles)} {styles.Count}");
+            int skipValues = classes.Count + styles.Count;
+            object[] cards = unparsedObjects.Skip(skipValues).ToArray();
+            Log($"Cards {string.Join(",", cards)} {cards.Count()}");
+
+            bool conditionMet = false;
+
+            if (classes.Count > 0 && styles.Count > 0) //Objects contain Classes and Styles and Cards
+            {
+                Log($"Classes and Styles");
+                conditionMet = classes.Contains(OpponentClass) && styles.Contains(EnemyStyle);
+            }
+            if (classes.Count > 0 && styles.Count == 0) //Objects contain Classes and cards
+            {
+
+                conditionMet = classes.Contains(OpponentClass);
+                Log($"Classes only {conditionMet}");
+
+            }
+            if (classes.Count == 0 && styles.Count > 0) //Objects contains Styles and cards
+            {
+                conditionMet = styles.Contains(EnemyStyle);
+                Log($"Styles only {conditionMet}");
+
+            }
+            Log($"Condition Met: {conditionMet}");
+
+
+            if (conditionMet)
+            {
+                Allow(cards);
+            }
+
+
+        }
+
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="style"></param>
+        /// <param name="class"></param>
+        /// <param name="cards"></param>
+        public void AllowAgainst(DeckClassification.Style style, HeroClass @class, params object[] cards)
+        {
+            if (@class != OpponentClass) return;
+            if (style != EnemyStyle) return;
+            Log($"AllowAgainstStyleClass||{@class}:OK\n{style}:OK");
+
+            Allow(cards);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="style"></param>
+        /// <param name="cards"></param>
+        public void AllowAgainst(DeckClassification.Style style, params object[] cards)
+        {
+            if (style != EnemyStyle) return;
+            Log($"AllowAgainstStyle{style}:OK");
+
+            Allow(cards);
         }
         /// <summary>
         /// Debug Log
@@ -502,6 +650,38 @@ namespace ACK
                 return 0;
             }
         }
+
+
+        public override string ToString()
+        {
+            return $"{nameof(CoreMaxes)}: {CoreMaxes}\n" +
+                   $"{nameof(Mode)}: {Mode}\n" +
+                   $" {nameof(MyStyle)}: {MyStyle}\n" +
+                   $"{nameof(MyDeck)}: {MyDeck}\n" +
+                   $"{nameof(EnemyStyle)}: {EnemyStyle}\n" +
+                   $"{nameof(LogData)}: {LogData}\n" +
+                   $" {nameof(Choices)}: {Choices}\n" +
+                   $"{nameof(OpponentClass)}: {OpponentClass}\n" +
+                   $"{nameof(OwnClass)}: {OwnClass}\n" +
+                   $"{nameof(ZeroDrops)}: {ZeroDrops}\n" +
+                   $"{nameof(OneDrops)}: {OneDrops}\n" +
+                   $"{nameof(TwoDrops)}: {TwoDrops}\n" +
+                   $"{nameof(ThreeDrops)}: {ThreeDrops}\n" +
+                   $"{nameof(FourDrops)}: {FourDrops}\n" +
+                   $"{nameof(FivePlusDrops)}: {FivePlusDrops}\n" +
+                   $"{nameof(HasTurnOne)}: {HasTurnOne}\n" +
+                   $"{nameof(HasTurnTwo)}: {HasTurnTwo}\n" +
+                   $"{nameof(HasTurnThree)}: {HasTurnThree}\n" +
+                   $"{nameof(Coin)}: {Coin}\n" +
+                   $"{nameof(WhiteList)}: {WhiteList}\n" +
+                   $"{nameof(MyDeckClassification)}: {MyDeckClassification}\n" +
+                   $"{nameof(MyChoicesClassification)}: {MyChoicesClassification}\n" +
+                   $"{nameof(CardsToKeep)}: {CardsToKeep}\n" +
+                   $"{nameof(AllowCoinSkip)}: {AllowCoinSkip}\n" +
+                   $"{nameof(AllowDragonActivators)}: {AllowDragonActivators}\n" +
+                   $"{nameof(Path)}: {Path}";
+        }
+
         /// <summary>
         /// Priority Table
         /// </summary>

@@ -103,7 +103,7 @@ namespace ACKTools
             {
                 using (StreamWriter sw = new StreamWriter(pathToSB + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
                 {
-                    sw.WriteLine("Midrange~Midrange~1~2~2~2~1~2~0~1~false~false~false~true~Ranked");
+                    sw.WriteLine("Midrange~Midrange~1~2~2~2~1~2~0~1~false~false~false~true~false~RankedStandard");
                 }
             }
             if (!File.Exists(pathToSB + "\\MulliganProfiles\\ACK.ini"))
@@ -323,12 +323,15 @@ namespace ACKTools
                     deck.AddRange(data.TakeWhile(q => q.Length >= 1).Select(q => (Card.Cards)Enum.Parse(typeof(Card.Cards), q)));
                 }
             }
+            //{0:My Style}, {1:Enemy Style}, {2:OneDrops}, {3:OneDropsCoint}, {4:TwoDrops}, {5:TwoDropsCoin},
+            //{ 6:ThreeDrops}, {7:ThreeDropsCoin}, {8:FourDrops}, {9:FourDropsCoin},
+            //{ 10:req1},{11:req2},{12:req3},{13:CoinSkip},{14:AllowDragons},{15:Mode} {16: Deck}, 
             using (StreamWriter sw = new StreamWriter(pathToSB + "\\MulliganProfiles\\ACK-MulliganTester.ini"))
             {
 
                 sw.WriteLine($"{myStyleBox.SelectedItem}~{enemyStyleBox.SelectedItem}~" +
                              $"{oneDropCount.Value}~{oneDropCoin.Value}~{twoDropCount.Value}~{TwoDropCoin.Value}~{threeDrop.Value}~{threeDropCoin.Value}" +
-                             $"~{fourDrop.Value}~{fourDropCoin.Value}~{reqOneTwo.Checked}~{reqTwoThree.Checked}~{reqThreeFour.Checked}~{coinSkip.Checked}~" +
+                             $"~{fourDrop.Value}~{fourDropCoin.Value}~{reqOneTwo.Checked}~{reqTwoThree.Checked}~{reqThreeFour.Checked}~{coinSkip.Checked}~{allowDragons.Checked}~" +
                              $"{modeBox.SelectedItem}~{string.Join(",", deck)}");
             }
             var DeckID = new DeckClassification(deck.Select(c => c.ToString()).ToList());
@@ -467,12 +470,17 @@ namespace ACKTools
             checkBox1_CheckedChanged(sender, e);
             richTextBox2.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].ClassificationSummary()}";
             richTextBox3.Text = $"{_ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].MulliganCoreSummary()}";
-
+            selectedDeckRtxt.Text = $"{string.Join("\n", _ourPlayedDecks[ourPlayedDeckLB.SelectedItem.ToString()].DeckList.Select(c=> new MinimalCardTemplate(c).Name))}";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            GenerateMulligan();
         }
     }
 

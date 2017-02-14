@@ -51,18 +51,20 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACK, Version=7.0.1.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ACK">
       <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\Plugins\libs\ACK.dll</HintPath>
     </Reference>
-    <Reference Include="SmartBotAPI">
-      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotAPI.dll</HintPath>
+    <Reference Include="SmartBotAPI, Version=41.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8 - Copy\SmartBotAPI.dll</HintPath>
     </Reference>
-    <Reference Include="SmartBotProfiles">
-      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotProfiles.dll</HintPath>
+    <Reference Include="SmartBotProfiles, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8 - Copy\SmartBotProfiles.dll</HintPath>
     </Reference>
-    <Reference Include="SmartBotStats">
-      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8\SmartBotStats.dll</HintPath>
+    <Reference Include="SmartBotStats, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\sb-v40.8 - Copy\SmartBotStats.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
