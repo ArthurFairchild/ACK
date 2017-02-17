@@ -121,7 +121,7 @@ namespace ACKTools
 
         private void mulliganButton_Click(object sender, EventArgs e)
         {
-            //applySettingsBtn_Click(sender, e);
+            applySettingsBtn_Click(sender, e);
             if (!coinBox.Checked && cardOffer4.Text != "")
                 coinBox.Checked = true;
 
