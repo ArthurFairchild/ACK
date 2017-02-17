@@ -101,7 +101,7 @@ namespace SmartBot.Plugins
         }
         public void Refresh()
         {
-
+            //Do nothing
         }
     }
 
