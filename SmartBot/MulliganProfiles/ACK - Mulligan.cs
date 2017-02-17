@@ -507,6 +507,7 @@ namespace MulliganProfiles
                         Cards.JadeIdol, Cards.JadeBlossom,
                         Cards.Innervate, Cards.Innervate, Cards.WildGrowth);//double allows duplicate [there is ought to be a better way of writing that]
                     mc.Allow(Cards.LivingRoots, mc.Coin); // [1 Cost]
+                    if(mc.Choices.Contains(Cards.Innervate.ToString()) && !mc.Against(AGGRO)) mc.Allow(Cards.FandralStaghelm, Cards.JadeSpirit, Cards.Nourish);
                    
 
                     break;
