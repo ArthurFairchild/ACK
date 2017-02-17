@@ -104,7 +104,7 @@
             // 
             // mysteryBtn3
             // 
-            this.mysteryBtn3.Location = new System.Drawing.Point(15, 293);
+            this.mysteryBtn3.Location = new System.Drawing.Point(15, 317);
             this.mysteryBtn3.Name = "mysteryBtn3";
             this.mysteryBtn3.Size = new System.Drawing.Size(106, 23);
             this.mysteryBtn3.TabIndex = 10;
