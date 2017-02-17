@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiscoverCC\MasterwaiDisco.cs" />
     <Compile Include="MulliganProfiles\ACK - Mulligan.cs" />
     <Compile Include="MulliganProfiles\Default.cs" />
     <Compile Include="Plugins\ACK - Bundle.cs" />
@@ -68,6 +70,8 @@
     <None Include="MulliganProfiles\ACK.ini" />
     <None Include="Plugins\ACK - Bundle.settings" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

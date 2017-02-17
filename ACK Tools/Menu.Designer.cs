@@ -44,9 +44,9 @@
             // 
             // convertHistoryBtn
             // 
-            this.convertHistoryBtn.Location = new System.Drawing.Point(135, 51);
+            this.convertHistoryBtn.Location = new System.Drawing.Point(15, 87);
             this.convertHistoryBtn.Name = "convertHistoryBtn";
-            this.convertHistoryBtn.Size = new System.Drawing.Size(116, 24);
+            this.convertHistoryBtn.Size = new System.Drawing.Size(105, 24);
             this.convertHistoryBtn.TabIndex = 0;
             this.convertHistoryBtn.Text = "Convert History";
             this.convertHistoryBtn.UseVisualStyleBackColor = true;
@@ -54,9 +54,9 @@
             // 
             // classifyHistoryBtn
             // 
-            this.classifyHistoryBtn.Location = new System.Drawing.Point(12, 51);
+            this.classifyHistoryBtn.Location = new System.Drawing.Point(15, 57);
             this.classifyHistoryBtn.Name = "classifyHistoryBtn";
-            this.classifyHistoryBtn.Size = new System.Drawing.Size(116, 24);
+            this.classifyHistoryBtn.Size = new System.Drawing.Size(105, 24);
             this.classifyHistoryBtn.TabIndex = 1;
             this.classifyHistoryBtn.Text = "Classify History";
             this.classifyHistoryBtn.UseVisualStyleBackColor = true;
@@ -64,9 +64,9 @@
             // 
             // cardBreakdownBtn
             // 
-            this.cardBreakdownBtn.Location = new System.Drawing.Point(135, 81);
+            this.cardBreakdownBtn.Location = new System.Drawing.Point(15, 117);
             this.cardBreakdownBtn.Name = "cardBreakdownBtn";
-            this.cardBreakdownBtn.Size = new System.Drawing.Size(116, 24);
+            this.cardBreakdownBtn.Size = new System.Drawing.Size(105, 24);
             this.cardBreakdownBtn.TabIndex = 3;
             this.cardBreakdownBtn.Text = "Card Breakdown";
             this.cardBreakdownBtn.UseVisualStyleBackColor = true;
@@ -74,9 +74,9 @@
             // 
             // mulliganTesterBtn
             // 
-            this.mulliganTesterBtn.Location = new System.Drawing.Point(12, 81);
+            this.mulliganTesterBtn.Location = new System.Drawing.Point(15, 147);
             this.mulliganTesterBtn.Name = "mulliganTesterBtn";
-            this.mulliganTesterBtn.Size = new System.Drawing.Size(117, 24);
+            this.mulliganTesterBtn.Size = new System.Drawing.Size(106, 24);
             this.mulliganTesterBtn.TabIndex = 4;
             this.mulliganTesterBtn.Text = "Mulligan Tester";
             this.mulliganTesterBtn.UseVisualStyleBackColor = true;
@@ -84,7 +84,7 @@
             // 
             // mysteryBtn
             // 
-            this.mysteryBtn.Location = new System.Drawing.Point(135, 141);
+            this.mysteryBtn.Location = new System.Drawing.Point(70, 235);
             this.mysteryBtn.Name = "mysteryBtn";
             this.mysteryBtn.Size = new System.Drawing.Size(51, 23);
             this.mysteryBtn.TabIndex = 8;
@@ -94,9 +94,9 @@
             // 
             // mysteryBtn2
             // 
-            this.mysteryBtn2.Location = new System.Drawing.Point(70, 141);
+            this.mysteryBtn2.Location = new System.Drawing.Point(15, 264);
             this.mysteryBtn2.Name = "mysteryBtn2";
-            this.mysteryBtn2.Size = new System.Drawing.Size(58, 23);
+            this.mysteryBtn2.Size = new System.Drawing.Size(105, 23);
             this.mysteryBtn2.TabIndex = 9;
             this.mysteryBtn2.Text = "Mystery";
             this.mysteryBtn2.UseVisualStyleBackColor = true;
@@ -104,9 +104,9 @@
             // 
             // mysteryBtn3
             // 
-            this.mysteryBtn3.Location = new System.Drawing.Point(12, 141);
+            this.mysteryBtn3.Location = new System.Drawing.Point(15, 293);
             this.mysteryBtn3.Name = "mysteryBtn3";
-            this.mysteryBtn3.Size = new System.Drawing.Size(52, 23);
+            this.mysteryBtn3.Size = new System.Drawing.Size(106, 23);
             this.mysteryBtn3.TabIndex = 10;
             this.mysteryBtn3.Text = "Mystery";
             this.mysteryBtn3.UseVisualStyleBackColor = true;
@@ -114,9 +114,9 @@
             // 
             // mysteryBtn4
             // 
-            this.mysteryBtn4.Location = new System.Drawing.Point(191, 141);
+            this.mysteryBtn4.Location = new System.Drawing.Point(15, 235);
             this.mysteryBtn4.Name = "mysteryBtn4";
-            this.mysteryBtn4.Size = new System.Drawing.Size(59, 23);
+            this.mysteryBtn4.Size = new System.Drawing.Size(49, 23);
             this.mysteryBtn4.TabIndex = 11;
             this.mysteryBtn4.Text = "Mystery";
             this.mysteryBtn4.UseVisualStyleBackColor = true;
@@ -124,9 +124,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(135, 112);
+            this.button1.Location = new System.Drawing.Point(15, 177);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 23);
+            this.button1.Size = new System.Drawing.Size(106, 23);
             this.button1.TabIndex = 13;
             this.button1.Text = "Arena BlackList";
             this.button1.UseVisualStyleBackColor = true;
@@ -135,9 +135,9 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(12, 112);
+            this.button2.Location = new System.Drawing.Point(15, 206);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(116, 23);
+            this.button2.Size = new System.Drawing.Size(106, 23);
             this.button2.TabIndex = 14;
             this.button2.Text = "Update";
             this.button2.UseVisualStyleBackColor = true;
@@ -145,10 +145,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 25);
+            this.textBox1.Location = new System.Drawing.Point(15, 31);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(238, 20);
+            this.textBox1.Size = new System.Drawing.Size(282, 20);
             this.textBox1.TabIndex = 15;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -166,7 +166,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(259, 176);
+            this.ClientSize = new System.Drawing.Size(475, 352);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
@@ -182,8 +182,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.Name = "Menu";
+            this.ShowIcon = false;
             this.Text = "ACK - Tools";
-            
             this.ResumeLayout(false);
             this.PerformLayout();
 

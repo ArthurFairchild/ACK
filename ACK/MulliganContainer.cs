@@ -458,12 +458,44 @@ namespace ACK
                 Allow(q.ToString(), cards.Count(c => c.ToString() == q.ToString()) > 1);
             }
         }
-
+        /// <summary>
+        /// Allow cards when certain condition is met
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="cards"></param>
+        public void Allow(bool condition, params object[] cards)
+        {
+            if (!condition)
+            {
+                Log("Condition not met");
+                return;
+            }
+            Allow(cards);
+        }
         public void AllowAsCombination(object requirment, object comboPiece)
         {
             string[] combo = new[] {requirment.ToString(), comboPiece.ToString()};
             Log($"Combination passed {requirment} {comboPiece}");
             if (Choices.Intersect(combo).Count() == 2)
+            {
+                Allow(comboPiece.ToString(), requirment.ToString());
+                Log($"Allowing {requirment} {comboPiece}");
+
+            }
+            else Log($"Combination Rejected: Combination not present");
+        }
+
+        /// <summary>
+        /// 3 Card combination check
+        /// </summary>
+        /// <param name="requirment"></param>
+        /// <param name="comboPiece"></param>
+        /// <param name="comboPiece2"></param>
+        public void AllowAsCombination(object requirment, object comboPiece, object comboPiece2)
+        {
+            string[] combo = new[] { requirment.ToString(), comboPiece.ToString(), comboPiece2.ToString() };
+            Log($"Combination check requested: {requirment} {comboPiece} {comboPiece2}");
+            if (Choices.Intersect(combo).Count() == 3)
             {
                 Allow(comboPiece.ToString(), requirment.ToString());
                 Log($"Allowing {requirment} {comboPiece}");
@@ -683,9 +715,9 @@ namespace ACK
         public void Log(string str)
         {
             //if (!LogData) return;
-            if (!File.Exists(Path + "\\Logs\\ACKTracker\\MatchHistory.txt"))
+            if (!File.Exists(Path + "\\Logs\\ACK\\MatchHistory.txt"))
             {
-                File.Create(Path + "\\Logs\\ACKTracker\\MatchHistory.txt");
+                File.Create(Path + "\\Logs\\ACK\\MatchHistory.txt");
             }
             try
             {
@@ -693,12 +725,12 @@ namespace ACK
                     StreamWriter sw = new StreamWriter(Path + "\\Logs\\ACK_MC_log",
                         true))
                 {
-                    sw.WriteLine(str);
+                    sw.WriteLine($"[{DateTime.UtcNow}] {str}");
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
-                
+                // ignored
             }
         }
         /// <summary>
@@ -822,7 +854,7 @@ namespace ACK
             {"CS2_059", 1}, //[0/1]Blood Imp [1 mana] [WARLOCK card]
             {"CS2_146", 1}, //[2/1]Southsea Deckhand [1 mana] [NONE card]
             {"CS2_169", 0}, //[1/1]Young Dragonhawk [1 mana] [NONE card]
-            {"CS2_188", 4}, //[2/1]Abusive Sergeant [1 mana] [NONE card]
+            {"CS2_188", 1}, //[1/1]Abusive Sergeant [1 mana] [NONE card]
             {"EX1_001", 0}, //[1/2]Lightwarden [1 mana] [NONE card]
             {"EX1_004", 1}, //[2/1]Young Priestess [1 mana] [NONE card]
             {"EX1_008", 3}, //[1/1]Argent Squire [1 mana] [NONE card]
@@ -847,22 +879,22 @@ namespace ACK
             {"GVG_009", 0}, //[2/1]Shadowbomber [1 mana] [PRIEST card]
             {"GVG_013", 2}, //[1/2]Cogmaster [1 mana] [NONE card]
             {"GVG_051", 1}, //[1/3]Warbot [1 mana] [WARRIOR card]
-            {"GVG_082", 3}, //[2/1]Clockwork Gnome [1 mana] [NONE card]
+            {"GVG_082", 2}, //[2/1]Clockwork Gnome [1 mana] [NONE card]
             {"BRM_004", 2}, //[2/1]Twilight Whelp [1 mana] [PRIEST card]
             {"BRM_022", 0}, //[0/2]Dragon Egg [1 mana] [NONE card]
-            {"AT_029", 8}, //[2/1]Buccaneer [1 mana] [ROGUE card]
+            {"AT_029", 5}, //[2/1]Buccaneer [1 mana] [ROGUE card]
             {"AT_059", -1}, //[2/1]Brave Archer [1 mana] [HUNTER card]
             {"AT_082", 2}, //[1/2]Lowly Squire [1 mana] [NONE card]
             {"AT_097", 1}, //[2/1]Tournament Attendee [1 mana] [NONE card]
             {"AT_105", 1}, //[2/4]Injured Kvaldir [1 mana] [NONE card]
-            {"AT_133", 6}, //[1/2]Gadgetzan Jouster [1 mana] [NONE card]
+            {"AT_133", 3}, //[1/2]Gadgetzan Jouster [1 mana] [NONE card]
             {"CS2_120", 3}, //[2/3]River Crocolisk [2 mana] [NONE card]
             {"CS2_121", 2}, //[2/2]Frostwolf Grunt [2 mana] [NONE card]
             {"CS2_142", 1}, //[2/2]Kobold Geomancer [2 mana] [NONE card]
             {"CS2_172", 3}, //[3/2]Bloodfen Raptor [2 mana] [NONE card]
             {"CS2_173", 0}, //[2/1]Bluegill Warrior [2 mana] [NONE card]
             {"EX1_015", 3}, //[1/1]Novice Engineer [2 mana] [NONE card]
-            {"EX1_066", 3}, //[3/2]Acidic Swamp Ooze [2 mana] [NONE card]
+            {"EX1_066", 2}, //[3/2]Acidic Swamp Ooze [2 mana] [NONE card]
             {"EX1_306", 1}, //[4/3]Succubus [2 mana] [WARLOCK card]
             {"EX1_506", 2}, //[2/1]Murloc Tidehunter [2 mana] [NONE card]
             {"EX1_565", 0}, //[0/3]Flametongue Totem [2 mana] [SHAMAN card]
@@ -871,7 +903,7 @@ namespace ACK
             {"EX1_045", 2}, //[4/5]Ancient Watcher [2 mana] [NONE card]
             {"EX1_049", 3}, //[3/2]Youthful Brewmaster [2 mana] [NONE card]
             {"EX1_055", 2}, //[1/3]Mana Addict [2 mana] [NONE card]
-            {"EX1_058", 3}, //[2/3]Sunfury Protector [2 mana] [NONE card]
+            {"EX1_058", 1}, //[2/3]Sunfury Protector [2 mana] [NONE card]
             {"EX1_059", 2}, //[2/2]Crazed Alchemist [2 mana] [NONE card]
             {"EX1_076", 1}, //[2/2]Pint-Sized Summoner [2 mana] [NONE card]
             {"EX1_082", 3}, //[3/2]Mad Bomber [2 mana] [NONE card]
@@ -932,7 +964,7 @@ namespace ACK
             {"AT_026",2}, //[4/3]Wrathguard [2 mana] [WARLOCK card]
             {"AT_030",4}, //[3/2]Undercity Valiant [2 mana] [ROGUE card]
             {"AT_031",1}, //[2/2]Cutpurse [2 mana] [ROGUE card]
-            {"AT_038",10}, //[2/3]Darnassus Aspirant [2 mana] [DRUID card]
+            {"AT_038",5}, //[2/3]Darnassus Aspirant [2 mana] [DRUID card]
             {"AT_042",2}, //[2/1]Druid of the Saber [2 mana] [DRUID card]
             {"AT_052", 8}, //[3/4]Totem Golem [2 mana] [SHAMAN card]
             {"AT_058",3}, //[3/2]King's Elekk [2 mana] [HUNTER card]
@@ -959,7 +991,7 @@ namespace ACK
             {"EX1_005",0}, //[4/2]Big Game Hunter [3 mana] [NONE card]
             {"EX1_006",0}, //[0/3]Alarm-o-Bot [3 mana] [NONE card]
             {"EX1_007",2}, //[1/3]Acolyte of Pain [3 mana] [NONE card]
-            {"EX1_014",5}, //[5/5]King Mukla [3 mana] [NONE card]
+            {"EX1_014",3}, //[5/5]King Mukla [3 mana] [NONE card]
             {"EX1_017",4}, //[4/2]Jungle Panther [3 mana] [NONE card]
             {"EX1_020",4}, //[3/1]Scarlet Crusader [3 mana] [NONE card]
             {"EX1_021",1}, //[2/3]Thrallmar Farseer [3 mana] [NONE card]
@@ -1049,7 +1081,7 @@ namespace ACK
             {"EX1_587",0}, //[3/3]Windspeaker [4 mana] [SHAMAN card]
             {"NEW1_011",0}, //[4/3]Kor'kron Elite [4 mana] [WARRIOR card]
             {"EX1_023",0}, //[3/3]Silvermoon Guardian [4 mana] [NONE card]
-            {"EX1_043",1}, //[4/1]Twilight Drake [4 mana] [NONE card]
+            {"EX1_043",3}, //[4/1]Twilight Drake [4 mana] [NONE card]
             {"EX1_046",5}, //[4/4]Dark Iron Dwarf [4 mana] [NONE card]
             {"EX1_048",0}, //[4/3]Spellbreaker [4 mana] [NONE card]
             {"EX1_057",0}, //[5/4]Ancient Brewmaster [4 mana] [NONE card]
@@ -1067,7 +1099,7 @@ namespace ACK
             {"NEW1_014",0}, //[4/4]Master of Disguise [4 mana] [ROGUE card]
             {"NEW1_022",0}, //[3/3]Dread Corsair [4 mana] [NONE card]
             {"NEW1_026",0}, //[3/5]Violet Teacher [4 mana] [NONE card]
-            {"LOE_012",1}, //[5/4]Tomb Pillager [4 mana] [ROGUE card]
+            {"LOE_012",4}, //[5/4]Tomb Pillager [4 mana] [ROGUE card]
             {"LOE_016",0}, //[2/6]Rumbling Elemental [4 mana] [SHAMAN card]
             {"LOE_017",0}, //[3/4]Keeper of Uldaman [4 mana] [PALADIN card]
             {"LOE_039",0}, //[3/4]Gorillabot A-3 [4 mana] [NONE card]
@@ -1151,7 +1183,7 @@ namespace ACK
             {AllCards.SpawnofNZoth, 1},
             {AllCards.SquirmingTentacle, 4},
             {AllCards.TwilightElder, 5},
-            {AllCards.FandralStaghelm, 3},
+            {AllCards.FandralStaghelm, 5},
             {AllCards.KlaxxiAmberWeaver, 2},
             {AllCards.MireKeeper, 1},
             {AllCards.InfestedWolf, 1},

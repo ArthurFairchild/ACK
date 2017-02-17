@@ -84,6 +84,8 @@ namespace SmartBot.Plugins
 
 
         }
+
+       
         private bool IsFileLocked(string filename)
         {
             bool Locked = false;
@@ -101,8 +103,14 @@ namespace SmartBot.Plugins
             }
             return Locked;
         }
+
+        public override void OnTick()
+        {
+            
+        }
         public override void OnGameEnd()
         {
+            
             if (Bot.CurrentMode() != Bot.Mode.RankedWild || Bot.CurrentMode() != Bot.Mode.RankedStandard) return;
             if (((ACKBundleMain)DataContainer).sLegend && Bot.GetPlayerDatas().GetRank() == 0)
             {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ACK;
 using SmartBot.Database;
 using SmartBot.Mulligan;
@@ -25,7 +26,7 @@ namespace MulliganProfiles
     // ReSharper disable once InconsistentNaming
     public class Mulligan : MulliganProfile
     {
-        public Card.Cards Nothing = Card.Cards.GAME_005;
+        public Card.Cards Nothing = Card.Cards.GAME_005;//Who needs a coin? 
         public HeroClass Mage = HeroClass.MAGE;
         public HeroClass Priest = HeroClass.PRIEST;
         public HeroClass Shaman = HeroClass.SHAMAN;
@@ -39,6 +40,13 @@ namespace MulliganProfiles
 
         public List<Card.Cards> HandleMulligan(List<Card.Cards> choices, Card.CClass opponentClass, Card.CClass ownClass)
         {
+            MulliganContainer t =  EvalueaContainer(choices, opponentClass, ownClass); //point proven [what did it accomplish again?]
+            return t.GetCardsWeKeep().ToCards();
+            
+        }
+
+        public MulliganContainer EvalueaContainer(List<Card.Cards> choices, Card.CClass opponentClass, Card.CClass ownClass)
+        {
             MulliganContainer mc;
             DeckClassification dc;
             try
@@ -47,41 +55,73 @@ namespace MulliganProfiles
                     choices.Select(c => c.ToString()).ToList(), opponentClass.ToString(), ownClass.ToString(),
                     Bot.CurrentDeck().Cards);
                 dc = new DeckClassification(Bot.CurrentDeck().Cards);
-                mc.LogData = false; //No need to debug log when bot is succesfully running
+                Bot.Log("[ACK - Mulligan] Treating our deck as " + dc.Name.ToLower());
+                mc.LogData = true; //No need to debug log when bot is succesfully running [disagree]
                 mc.Log(mc.ToString());
                 AssignCoreMaxes(mc, dc);
                 MulliganAck(mc, dc);
-                return mc.GetCardsWeKeep().ToCards();
+                return mc;
             }
-            catch (Exception) // Mulligan Tester Event
+            catch (Exception e) // Mulligan Tester Event
             {
-                
-                mc = new MulliganContainer(AppDomain.CurrentDomain.BaseDirectory+"\\MulliganProfiles\\ACK-MulliganTester.ini",
-                    choices.Select(c=> c.ToString()).ToList(), opponentClass.ToString(), ownClass.ToString());
+                Bot.Log("[ACK - Mulligan] Encountered an Error " + e.Message + ", using Mulligan Tester Values.");
+                mc =
+                    new MulliganContainer(
+                        AppDomain.CurrentDomain.BaseDirectory + "\\MulliganProfiles\\ACK-MulliganTester.ini",
+                        choices.Select(c => c.ToString()).ToList(), opponentClass.ToString(), ownClass.ToString());
                 dc = new DeckClassification(mc.MyDeck);
                 mc.Log("----------------Mulligan Tester Container");
-               // mc.LogData = true;
+                mc.LogData = true;
+                mc.Log(e.Message + "\n\n" + e);
                 mc.Log(mc.ToString());
-                mc.Log("\n"+dc.ToString() +"\n\n");
+                mc.Log("\n" + dc.ToString() + "\n\n");
                 AssignCoreMaxes(mc, dc);
                 MulliganAck(mc, dc);
-                return mc.GetCardsWeKeep().ToCards();
+                return mc;
 
             }
-           
-        }
+            finally
+            {
+                Bot.Log("[ACK] Complete");
 
+            }
+        }
+        public static Dictionary<Card.CClass, DeckClassification.Style> ClassStyleDictionary =
+            new Dictionary<Card.CClass, DeckClassification.Style>();
         private static void AssignCoreMaxes(MulliganContainer mc, DeckClassification dc)
         {
             
             try
             {
+               
                 var test =
-                    Bot.GetPlugins().Find(c => c.DataContainer.Name == "ACK - Mulligan Container").GetProperties();
+                      Bot.GetPlugins().Find(c => c.DataContainer.Name == "ACK - Mulligan Container").GetProperties();
+                foreach (var q in test.Where(c => c.Key.Length >= 12))
+                {
+                    if (q.Key.Substring(12).Length < 4) continue; //against unconventional naming techniques
+                    try
+                    {
+                        ClassStyleDictionary.AddOrUpdate
+                            ((Card.CClass) Enum.Parse(typeof(Card.CClass), q.Key.Substring(12).ToUpper()),(DeckClassification.Style) q.Value);
+                    }
+                    catch (Exception exception)
+                    {
+                        Bot.Log("[ACK Error]" +exception.Message);
+                        mc.Log("[ACK Error]" + exception.Message);
+                        
+                    }
+
+                }
+                if (string.Equals(test["ModeAssumption"].ToString(), "FromPlugin", StringComparison.Ordinal))
+                {
+                    mc.EnemyStyle = ClassStyleDictionary[(Card.CClass) mc.OpponentClass];
+                }
+                Bot.Log("[ACK - Mulligan] Treating enemy as " + mc.EnemyStyle.ToString().ToLower() +" " +mc.OpponentClass.ToString().ToLower());
                 mc.Log("Mulligan Container plugin communication was succesful");
                 var values = (from q in test where q.Value is int select (int)q.Value).ToList();
                 mc.Log(string.Join("/", values));
                 var curve = (from q in test where q.Value is bool select (bool)q.Value).ToList();
+                var modeAdjustment = (from q in test where q.Value is string select (string) q.Value).ToList();
                 mc.Log(string.Join("/", curve));
                 mc.CoreMaxes = new MulliganContainer.MulliganCoreData(values);
                 mc.CoreMaxes.UpdateStrictCurve(curve);
@@ -188,8 +228,12 @@ namespace MulliganProfiles
                     .Take(allowed2Drops))
             {
                 mc.HasTurnTwo = true;
+                
                 mc.Allow(q, mc.GetPriority(q) > 5);
+                
             }
+            if (mc.Choices.Count(c=> c.ToString() == Cards.TotemGolem.ToString()) == 2)
+                mc.HasTurnThree = true;
             if (!mc.AllowCoinSkip && mc.CoreMaxes.RequireTwoForThree && !mc.HasTurnTwo)
             {
                 HandleSpecialScenarios(mc, dc);
@@ -236,7 +280,7 @@ namespace MulliganProfiles
             if (dc.Dragons)
             {
                 mc.Log("\nEntered {GoThroughDragons}");
-
+                mc.UpdatePriorityTable(Cards.TwilightDrake, 5);
                 mc.UpdatePriorityTable(Cards.TwilightWhelp, 3);
                 mc.UpdatePriorityTable(Cards.WyrmrestAgent, mc.Coin ? 7 : 3);
                 if (mc.Coin) mc.Allow(Cards.TwilightGuardian);
@@ -246,7 +290,6 @@ namespace MulliganProfiles
                 mc.UpdatePriorityTable(Cards.TwilightGuardian, mc.Coin ? 5 : 2);
                 if (mc.Against(Priest))
                 {
-                    mc.UpdatePriorityTable(Cards.TwilightDrake, mc.Coin ? 5 : 2);
                     mc.UpdatePriorityTable(Cards.DrakonidOperative, mc.Coin ? 768 : 3);
                     mc.Allow(Cards.DrakonidOperative);//He is above 5 mana, and won't be handled by core
                 }
@@ -257,12 +300,29 @@ namespace MulliganProfiles
                 }
                 mc.Log("Existed {GoThroughDragons}\n");
             }
+            if (mc.Against(Paladin, Hunter, Rogue, Warrior))
+            {
+                mc.UpdatePriorityTable(Cards.AcidicSwampOoze,
+                    mc.Choices.Any(c => c != Cards.AcidicSwampOoze.ToString() && CardTemplate.LoadFromId(c).Cost == 2)
+                        ? 3
+                        : 0);
+                mc.AllowOnCoin(Cards.AcidicSwampOoze);
+            }
+            if (mc.Against(Warlock))
+            {
+                mc.UpdatePriorityTable(Cards.DaringReporter, 4);
+            }
+            if(!mc.Iam(AGGRO) && mc.Iam(Warrior)) mc.UpdatePriorityTable(Cards.BloodhoofBrave, 4);
 
         }
 
         private void AdjustUserPriorities(MulliganContainer mc, DeckClassification dc)
         {
-            //TODO adjust later
+            return;
+            using (StreamReader sr = new StreamReader("ACK-Mulligan.ini"))
+            {
+                //TODO adjust later
+            }
         }
         private readonly DeckClassification.Style AGGRO = DeckClassification.Style.Aggro;
         private readonly DeckClassification.Style MIDRANGE = DeckClassification.Style.Midrange;
@@ -302,15 +362,15 @@ namespace MulliganProfiles
 
             #region spell/weapon handler
            
-
+            if(mc.Iam(CONTROL))mc.Allow(Cards.Doomsayer);
+            if (mc.Against(CONTROL) && mc.Against(Priest, Warlock, Mage))
+            {
+                if(mc.WhiteList.ContainsKey(Cards.MistressofMixtures.ToString()))
+                     mc.WhiteList.Remove(Cards.MistressofMixtures.ToString());
+            }
             switch (mc.OwnClass)
             {
-                case HeroClass.SHAMAN://Cards like Totem Golem Are handled by Core
-                    //_whiteList.AddInOrder(1, mc.Choices, false, Cards.StormforgedAxe, Cards.Powermace);
-                    //mc.Allow( Cards.RockbiterWeapon, false); // [1 Cost]
-                    //mc.Allow( !hasGood2 && mc.Coin ? Cards.FarSight : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( Cards.FeralSpirit, false); // [3 Cost]
-                    //mc.Allow( Cards.JadeClaws, false);
+                case HeroClass.SHAMAN:
                     mc.Log("[We are Shaman]");
                     mc.Allow(1, Cards.JadeClaws, Cards.SpiritClaws);
                     mc.AllowOnCoin(Cards.TunnelTrogg, Cards.TunnelTrogg , Cards.FeralSpirit);
@@ -336,85 +396,118 @@ namespace MulliganProfiles
                         mc.AllowAgainst(CONTROL, Rogue, Cards.Hex, Cards.ManaTideTotem);
                         mc.AllowAgainst(Rogue, Cards.Hex); //Against Edwin/Questing
                     }
+                    mc.AllowAgainst(Priest, Cards.FlametongueTotem);
                     //mc.AllowAgainst(AGGRO , Shaman, Cards.Hex, Cards.Hex, Cards.LightningBolt, Cards.LightningStorm);
                     mc.Log("[/We are Shaman]");
 
                     break;
                 case HeroClass.PRIEST:
-                    //mc.Allow( mc.Choices.HasAny(Cards.InjuredBlademaster) ? Cards.LightoftheNaaru : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood1Or2 ? Cards.HolySmite : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( !mc.Coin ? Cards.MindVision : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( Cards.PowerWordShield, false); // [1 Cost] 
-                    //mc.Allow( Cards.ShadowWordPain, false); // [2 Cost]
-                    //mc.Allow( Cards.Shadowform, false); // [3 Cost]
-                    //mc.Allow( (hasGood1Or2 && mc.Coin) || hasGood2 ? Cards.VelensChosen : Card.Cards.GAME_005, false); // [3 Cost]
+                    if (mc.Iam(CONTROL) && !mc.Against(AGGRO))
+                    {
+                        mc.AllowAsCombination(Cards.InjuredBlademaster, Cards.CircleofHealing);
+                        mc.AllowAsCombination(Cards.InjuredBlademaster, Cards.LightoftheNaaru);
+                    }
+                    mc.AllowAgainst(AGGRO,Cards.HolySmite, Cards.ShadowWordPain);
+                    mc.Allow(mc.HasTurnOne||mc.Coin,  Cards.PowerWordShield); // [1 Cost] 
+                    mc.Allow( mc.HasTurnTwo , Cards.VelensChosen); // [3 Cost]
                     break;
                 case HeroClass.MAGE:
-                    //mc.Allow( hasGood1 ? Cards.Frostbolt : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.ManaWyrm) && mc.Coin ? Cards.MirrorImage : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood1 ? Cards.ArcaneMissiles : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( !hasGood1And2 ? Cards.MirrorEntity : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( !hasGood1And2 || hasGood2 ? Cards.ForgottenTorch : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( hasGood1 || mc.Coin ? Cards.Flamecannon : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( Cards.UnstablePortal, mc.Coin); // [2 Cost]
-                    //mc.Allow( hasGood1Or2 ? Cards.ArcaneBlast : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood1Or2 ? Cards.VolcanicPotion : Nothing, false);
+                    mc.AllowAgainst(AGGRO, Cards.Frostbolt, Cards.ArcaneBlast,
+                        Cards.ForbiddenFlame, Cards.ForgottenTorch, Cards.Flamecannon, Cards.VolcanicPotion);
+                    if(mc.Coin)mc.AllowAsCombination(Cards.ManaWyrm, Cards.MirrorImage);
+                    mc.Allow( Cards.UnstablePortal, mc.Coin); // [2 Cost]
+                    
                     break;
                 case HeroClass.PALADIN:
-                    //_whiteList.AddInOrder(1, mc.Choices, false, Cards.LightsJustice, Cards.RallyingBlade, Cards.Coghammer, Cards.SwordofJustice);
-                    //mc.Allow( mc.Coin ? Cards.DivineStrength : Nothing, false);
-                    //mc.Allow( hasGood2 ? Cards.NobleSacrifice : Nothing, false); // [1 Cost]
-                    //mc.Allow(false, Cards.Avenge, Cards.MusterforBattle);
-                    //mc.Allow( Cards.SmugglersRun, false);
+                    mc.AllowAsCombination(Cards.MusterforBattle, Cards.Avenge);
+                    mc.AllowAsCombination(Cards.KnifeJuggler, Cards.NobleSacrifice);
+                    mc.AllowAsCombination(Cards.Secretkeeper, Cards.Avenge, Cards.NobleSacrifice);
+                    if(mc.Coin) mc.AllowAsCombination(Cards.Redemption, Cards.ShieldedMinibot);
+                    if(mc.HasTurnOne && mc.HasTurnTwo && mc.HasTurnThree && mc.Coin && mc.Against(Warrior, Hunter))mc.Allow(Cards.HarrisonJones);
+                    if (mc.Coin)
+                    {
+                        mc.AllowAsCombination(Cards.HauntedCreeper, Cards.KeeperofUldaman);
+                        mc.AllowAsCombination(Cards.NerubianEgg, Cards.KeeperofUldaman);
+                    }
+                    if (mc.Against(AGGRO))
+                    {
+                        mc.AllowAgainst(Druid, Cards.AldorPeacekeeper);
+                        mc.AllowOnCoin(Cards.Consecration);
+                        mc.AllowOnCoin(Cards.PilotedShredder);
+                    }
+                    else
+                    {
+                        mc.AllowOnCoin(Cards.MysteriousChallenger, Cards.TruesilverChampion);
+                        mc.AllowAgainst(Warrior, CONTROL, Cards.PilotedShredder, Cards.PilotedShredder);
+                    }
+                    mc.Allow(Cards.MusterforBattle);
+                    if(mc.HasTurnTwo) mc.Allow(Cards.Coghammer);
+                    mc.AllowAgainst(Priest, Rogue, Druid, Cards.TruesilverChampion);
+                    mc.Allow(1, Cards.LightsJustice, Cards.RallyingBlade, Cards.Coghammer, Cards.SwordofJustice);
+                    mc.Allow(Cards.SmugglersRun);
+                    if (mc.Mode.Contains("Arena"))
+                    {
+                        mc.AllowOnCoin(Cards.DivineStrength);
+                    }
+                    
 
                     break;
                 case HeroClass.WARRIOR:
-                    //mc.Allow( mc.OpponentClass == Card.CClass.PALADIN ? Cards.Whirlwind : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood2 && mc.Choices.HasAny(Cards.ShieldSlam) ? Cards.ShieldBlock : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow(false, Cards.BloodToIchor, Cards.Slam); // [2 Cost]
-                    //mc.Allow( !hasGood1 ? Cards.Upgrade : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood2 && mc.Choices.HasAny(Cards.ShieldBlock) ? Cards.ShieldSlam : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( hasGood1Or2 && !mc.Choices.HasTurn(3, 3) ? Cards.Bash : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( Cards.IKnowaGuy, false);
+                    
+                    mc.Allow(Cards.FieryWarAxe);
+                    if (mc.Mode.Contains("Arena"))
+                    {
+                        mc.AllowAgainst(Paladin, Cards.Whirlwind);
+                        if(!mc.HasTurnOne)mc.Allow(Cards.IKnowaGuy);
+
+                    }
+                    if (mc.Iam(CONTROL))
+                    {
+                        mc.AllowAsCombination(Cards.ShieldSlam, Cards.ShieldBlock);
+                        mc.Allow(Cards.BloodToIchor, Cards.Slam);
+                        if(mc.HasTurnTwo && mc.Against(MIDRANGE)) mc.AllowAsCombination(Cards.ShieldBlock, Cards.ShieldSlam);//debatable
+                        if(!mc.HasTurnThree && mc.HasTurnTwo) mc.Allow(Cards.Bash);
+                    }
+                    mc.AllowAgainst(CONTROL, Cards.Execute);
                     break;
                 case HeroClass.WARLOCK:
-                    //mc.Allow(false, Cards.RenounceDarkness, Cards.MortalCoil); // [1 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.NerubianEgg) ? Cards.PowerOverwhelming : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( !hasGood2 ? Cards.CurseofRafaam : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( hasGood1Or2 || mc.Coin ? Cards.Darkbomb : Card.Cards.GAME_005, false); // [2 Cost]
-
+                    if(mc.Iam(CONTROL))mc.Allow(Cards.RenounceDarkness, Cards.MortalCoil, Cards.Darkbomb);
+                    mc.AllowAgainst(AGGRO, Cards.Demonwrath );
+                    mc.AllowAgainst(Warrior, Priest, Rogue, Cards.ShadowBolt);
+                    mc.AllowAsCombination(Cards.NerubianEgg, Cards.PowerOverwhelming);
+                    if(mc.HasTurnOne || mc.HasTurnTwo) mc.Allow(Cards.Darkbomb);
+                    
                     break;
                 case HeroClass.HUNTER:
                     //_whiteList.AddInOrder(1, mc.Choices, false, Cards.Glaivezooka, Cards.EaglehornBow);
-
-                    //mc.Allow( !hasGood1Or2 ? Cards.Tracking : Card.Cards.GAME_005, false); // [1 Cost]
-                    //mc.Allow( Cards.AnimalCompanion, mc.Coin); // [3 Cost]
-                    //mc.Allow( mc.OpponentClass == HeroClass.PALADIN ? Cards.UnleashtheHounds : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.KnifeJuggler) ? Cards.SnakeTrap : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( !hasGood1Or2 ? Cards.FreezingTrap : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( hasGood1Or2 && mc.Coin ? Cards.QuickShot : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( hasGood1And2 ? Cards.Powershot : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( mc.Coin ? Cards.BearTrap : Card.Cards.GAME_005, false); // [2 Cost]
-                    //mc.Allow( mc.Choices.HasRace(Card.CRace.BEAST) ? Cards.SmugglersCrate : Nothing, false);
-                    //mc.Allow( mc.HasTurnOne ? Cards.HiddenCache : Nothing, false);
+                    mc.Allow(1, Cards.Glaivezooka, Cards.EaglehornBow);
+                    
+                    mc.Allow( !(mc.HasTurnOne && mc.HasTurnTwo) , Cards.Tracking); // [1 Cost]
+                    mc.Allow(mc.HasTurnTwo, Cards.AnimalCompanion);
+                    mc.AllowAgainst(AGGRO, Cards.UnleashtheHounds);
+                    mc.AllowAsCombination(Cards.KnifeJuggler, Cards.SnakeTrap);
+                    mc.Allow(mc.HasTurnOne && mc.HasTurnTwo, Cards.Powershot);
+                    mc.AllowOnCoin(Cards.BearTrap);
+                    mc.Allow(Cards.SmugglersCrate);
+                    mc.Allow( mc.HasTurnOne, Cards.HiddenCache );
                     break;
                 case HeroClass.ROGUE:
-                    //_whiteList.AddInOrder(1, mc.Choices, false, Cards.PerditionsBlade, Cards.CogmastersWrench);
-                    //mc.Allow( mc.Coin || !mc.HasTurnOne ? Cards.JourneyBelow : Nothing, false);
-                    //mc.Allow( Cards.Backstab, false); // [0 Cost]
-                    //mc.Allow( Cards.DeadlyPoison, false); // [1 Cost]
-                    //mc.Allow( mc.OpponentClass == HeroClass.PALADIN ? Cards.FanofKnives : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.Burgle) || mc.Choices.HasAny(Cards.BeneaththeGrounds) ? Cards.Preparation : Card.Cards.GAME_005, false); // [0 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.Preparation) ? Cards.Burgle : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( mc.Choices.HasAny(Cards.Preparation) ? Cards.BeneaththeGrounds : Card.Cards.GAME_005, false); // [3 Cost]
-                    //mc.Allow( Cards.CounterfeitCoin, false);
+                    mc.Allow(1, Cards.PerditionsBlade, Cards.CogmastersWrench);
+                    mc.Allow( mc.Coin || !mc.HasTurnOne , Cards.JourneyBelow);
+                    mc.Allow( Cards.Backstab, Cards.DeadlyPoison, Cards.CounterfeitCoin); // [0 Cost]
+                    mc.AllowAgainst(AGGRO,  Cards.FanofKnives ); // [3 Cost]
+                    mc.AllowAsCombination(Cards.Preparation, Cards.BeneaththeGrounds); //Meme fiesta won't work.[You are a fucking idiot lol]
+                    mc.AllowAsCombination(Cards.CounterfeitCoin, Cards.CounterfeitCoin, Cards.EdwinVanCleef);
+                    
 
                     break;
                 case HeroClass.DRUID:
 
-                    mc.Allow(Cards.Wrath, Cards.PoweroftheWild);
+                    mc.Allow(Cards.Wrath, Cards.PoweroftheWild, 
+                        Cards.JadeIdol, Cards.JadeBlossom,
+                        Cards.Innervate, Cards.Innervate, Cards.WildGrowth);//double allows duplicate [there is ought to be a better way of writing that]
                     mc.Allow(Cards.LivingRoots, mc.Coin); // [1 Cost]
-                    mc.Allow(Cards.JadeIdol, Cards.JadeBlossom);
+                   
 
                     break;
             }
@@ -431,56 +524,7 @@ namespace MulliganProfiles
             #endregion
         }
 
-        ///// <summary>
-        ///// Secret Palaidn mulligan logic
-        ///// ported from V2
-        ///// </summary>
-        ///// <param name="mc">game container</param>
-        //private void HandleSecretPaladin(GameContainer mc)
-        //{
-        //    var has2Drop = mc.Choices.Any(c => c.Cost() == 2 && c.IsMinion());
-        //    bool vAggro = mc.EnemyStyle.Aggresive();
-        //    mc.Allow( !mc.Choices.HasTurn(1, 0) && mc.Coin && mc.Choices.HasAny(Cards.MusterforBattle) ? Cards.Avenge : Nothing, false);
-        //    mc.Allow( mc.OpponentClass.Is(Shaman) && mc.Choices.HasAny(Cards.ShieldedMinibot) ? Cards.Redemption : Nothing, false);
-
-        //    if (mc.Choices.HasAll(Cards.NobleSacrifice, Cards.Avenge, Cards.Secretkeeper) && mc.OpponentClass.Is(Shaman))
-        //        mc.Allow(false, Cards.NobleSacrifice, Cards.Avenge, Cards.Secretkeeper);
-        //    mc.Allow( mc.OpponentClass.Is(Shaman) && mc.Coin ? Cards.HarrisonJones : Nothing, false);
-        //    mc.Allow( mc.Choices.HasAny(Cards.HauntedCreeper, Cards.NerubianEgg) && mc.Coin ? Cards.KeeperofUldaman : Nothing, false);
-
-        //    foreach (var q in mc.Choices)
-        //    {
-        //        var card = CardTemplate.LoadFromId(q);
-        //        if (q.Cost() == 1 && q.IsMinion())
-        //            mc.Allow( q, card.Divineshield || card.Health == 3);
-        //        if (q.Cost() == 2 && q.IsMinion())
-        //            mc.Allow( q, card.Divineshield && card.Atk == 2);
-        //        if (q.Cost() == 3 && q.IsSpell() && q != Cards.DivineFavor)
-        //            mc.Allow( q, false);
-        //    }
-        //    if (vAggro)
-        //    {
-        //        mc.Allow( mc.OpponentClass.Is(Druid) ? Cards.AldorPeacekeeper : Nothing, false);
-        //        mc.Allow( Cards.Consecration, false);
-        //        mc.Allow( mc.Coin ? Cards.PilotedShredder : Nothing, false);
-        //    }
-        //    else
-        //    {
-        //        _whiteList.Remove(Cards.IronbeakOwl);
-        //        mc.Allow( mc.Coin ? Cards.MysteriousChallenger : Nothing, false);
-        //        mc.Allow( mc.Coin ? Cards.TruesilverChampion : Nothing, false);
-        //        mc.Allow( Cards.PilotedShredder, mc.OpponentClass.Is(Warrior) && mc.Coin);
-        //    }
-        //    mc.Allow( Cards.MusterforBattle, false);
-        //    if (mc.Choices.HasAny(Cards.Coghammer) && has2Drop && !mc.OpponentClass.Is(Warrior))
-        //        mc.Allow( Cards.Coghammer, false);
-        //    else if (mc.OpponentClass.IsOneOf(Warrior, Priest, Rogue, Druid))
-        //        mc.Allow( Cards.TruesilverChampion, false);
-        //}
-
-
-
-
+       
 
 
     }

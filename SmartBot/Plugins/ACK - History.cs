@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using ACK;
 using SmartBot.Database;
 
@@ -66,7 +65,7 @@ namespace SmartBot.Plugins
         {
             SaveGame("Lost");
         }
-        // $"{Time}~{Mode}~{Coin}~{Result}~{MyClass}~{MyDeck}~{MyPlayed}~{MyDrawn}~{OpponentId}~{OpponentClass}~{OpponentCards}";
+        // $"{0:Time}~{1:Mode}~{2:Coin}~{3:Result}~{4:MyClass}~{5:MyDeck}~{6:MyPlayed}~{7:MyDrawn}~{8:OpponentId}~{9:OpponentClass}~{10:OpponentCards}";
         private void SaveGame(string res)
         {
             bool coin = Bot.CurrentBoard.FriendGraveyard.Contains(Card.Cards.GAME_005) ||
@@ -88,12 +87,13 @@ namespace SmartBot.Plugins
             List<string> emyList = board.Select(q => CardTemplate.LoadFromId(q.ToString()).Id.ToString()).ToList();
             emyList.AddRange(graveyard.Where(c => CardTemplate.LoadFromId(c).IsCollectible).Select(q => CardTemplate.LoadFromId(q).Id.ToString()));
             if(weapon != null)
-                emyList.Add(weapon.ToString());
+                emyList.Add(weapon.Template.Id.ToString());
             Bot.Log(string.Join("," ,emyList));
             return string.Join(",", emyList);
 
         }
 
+       
         private KeyValuePair<string, string> MyPlayedCards()
         {
             List<Card.Cards> graveyard = Bot.CurrentBoard.FriendGraveyard.ToList();
